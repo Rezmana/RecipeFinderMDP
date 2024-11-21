@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/titleText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Do you have any food allergies?"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <CheckBox
+                android:id="@+id/AllergiesButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Yes"
+                android:textSize="16sp"
+                android:padding="8dp"/>
+
+            <LinearLayout
+                android:id="@+id/allergiesContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/descriptionText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Select all that apply. This helps us filter out recipes that contain allergens."
+                    android:textSize="16sp"
+                    android:layout_marginBottom="16dp"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/allergyRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"/>
+
+                <TextView
+                    android:id="@+id/customAllergiesTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Custom Allergies"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"/>
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/customChipGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:chipSpacingHorizontal="8dp"
+                    app:chipSpacingVertical="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp">
+
+                    <EditText
+                        android:id="@+id/customAllergyInput"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="Enter custom allergy"
+                        android:inputType="text"/>
+
+                    <Button
+                        android:id="@+id/addCustomAllergyButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Add"
+                        android:layout_marginStart="8dp"/>
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <Button
+        android:id="@+id/continueButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="Continue"/>
+
+</LinearLayout>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/landingpage">
+
+    <fragment
+        android:id="@+id/fragmentRegistration"
+        android:name="com.example.recipefinder.RegistrationFragment"
+        android:label="fragment_registration"
+        tools:layout="@layout/fragment_registration" >
+        <action
+            android:id="@+id/action_fragmentRegistration_to_fragmentAllergies"
+            app:destination="@id/fragmentAllergies" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentLogin"
+        android:name="com.example.recipefinder.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/fragmentAllergies"
+        android:name="com.example.recipefinder.FragmentAllergies"
+        android:label="fragment_allergies"
+        tools:layout="@layout/fragment_allergies" />
+    <fragment
+        android:id="@+id/landingpage"
+        android:name="com.example.recipefinder.landingpage"
+        android:label="fragment_landingpage"
+        tools:layout="@layout/fragment_landingpage" >
+        <action
+            android:id="@+id/action_landingpage_to_fragmentRegistration"
+            app:destination="@id/fragmentRegistration" />
+        <action
+            android:id="@+id/action_landingpage_to_fragmentLogin"
+            app:destination="@id/fragmentLogin" />
+    </fragment>
+</navigation>
