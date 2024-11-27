@@ -1,0 +1,188 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/foodDetailsFragment"
+    android:layout_marginBottom="?actionBarSize"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Food Picture -->
+        <ImageView
+            android:id="@+id/foodPicture"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:contentDescription="Food Picture"
+            android:scaleType="centerCrop"
+            android:src="@drawable/baseline_assignment_add_24" />
+
+        <!-- Food Name -->
+        <TextView
+            android:id="@+id/foodName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Food Name"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-medium"
+            android:paddingTop="8dp" />
+
+        <!-- By User -->
+        <TextView
+            android:id="@+id/author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="By: User"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-light"
+            android:paddingBottom="8dp" />
+
+        <!-- Tags -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingVertical="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vegan"
+                android:background="@drawable/tag_background"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Asian"
+                android:background="@drawable/tag_background"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+                android:textSize="12sp"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <!-- Cooking Types -->
+        <TextView
+            android:id="@+id/cookingTypes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Type of Cooking: Baking, Frying, etc."
+            android:textSize="14sp"
+            android:paddingVertical="8dp" />
+
+        <!-- Diet -->
+        <TextView
+            android:id="@+id/diet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Diet: 100Cal, Fiber: 10g, Carbs: 10g, Fats: 10g"
+            android:textSize="14sp"
+            android:paddingBottom="8dp" />
+
+        <!-- Total Servings -->
+        <TextView
+            android:id="@+id/totalServings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Servings: 1 pax"
+            android:textSize="14sp"
+            android:paddingBottom="16dp" />
+
+        <!-- Ingredients -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ingredients:"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rice: 100g" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Beans: 20g" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Oil: 100ml"
+            android:paddingBottom="16dp" />
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/prepButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Prep"
+                android:layout_marginEnd="16dp" />
+
+            <Button
+                android:id="@+id/cookButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cook" />
+        </LinearLayout>
+
+        <!-- Add Comment Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingTop="16dp">
+
+            <EditText
+                android:id="@+id/commentInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Add a comment"
+                android:padding="8dp"
+                android:background="@drawable/common_google_signin_btn_icon_dark_normal_background"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/addCommentButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Post"
+                android:padding="8dp"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <!-- Comments Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Comments:"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/commentsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:layout_marginBottom="16dp" />
+
+    </LinearLayout>
+</ScrollView>

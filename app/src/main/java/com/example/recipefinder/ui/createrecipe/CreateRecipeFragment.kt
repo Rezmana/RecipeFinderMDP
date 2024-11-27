@@ -1,16 +1,24 @@
-package com.example.recipefinder.fragments
+package com.example.recipefinder.ui.createrecipe
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.recipefinder.R
 import com.example.recipefinder.databinding.FragmentCreateRecipeBinding
 import com.example.recipefinder.entities.Recipe
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import java.util.UUID
 
 class CreateRecipeFragment : Fragment() {
@@ -22,6 +30,41 @@ class CreateRecipeFragment : Fragment() {
 
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
+    private val storage = FirebaseStorage.getInstance()
+
+    private var imageUri: Uri? = null
+
+    // Image Picker
+    private val imagePickerLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            data?.data?.let { uri ->
+                try {
+                    // Validate the URI
+                    val contentResolver = requireContext().contentResolver
+                    val mimeType = contentResolver.getType(uri)
+
+                    // Check if the selected file is an image
+                    if (mimeType?.startsWith("image/") == true) {
+                        imageUri = uri
+                        binding.ivRecipeImage.setImageURI(uri)
+                    } else {
+                        showToast("Please select a valid image file")
+                        imageUri = null
+                    }
+                } catch (e: Exception) {
+                    Log.e("ImagePicker", "Error processing image", e)
+                    showToast("Error selecting image: ${e.localizedMessage}")
+                    imageUri = null
+                }
+            } ?: run {
+                showToast("No image was selected")
+                imageUri = null
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,11 +77,42 @@ class CreateRecipeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupSpinners()
         setupClickListeners()
         updatePreview() // Initialize empty previews
     }
 
+    private fun setupSpinners() {
+        // Cuisine Spinner
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.cuisine_types,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.spinnerCuisine.adapter = adapter
+        }
+
+        // Difficulty Spinner
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.difficulty_levels,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.spinnerDifficulty.adapter = adapter
+        }
+    }
+
     private fun setupClickListeners() {
+        // Image Upload
+        binding.btnUploadImage.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            imagePickerLauncher.launch(intent)
+        }
+
+        // Add Ingredient
         binding.btnAddIngredient.setOnClickListener {
             val ingredient = binding.etIngredient.text.toString().trim()
             if (ingredient.isNotEmpty()) {
@@ -51,6 +125,7 @@ class CreateRecipeFragment : Fragment() {
             }
         }
 
+        // Add Step
         binding.btnAddStep.setOnClickListener {
             val step = binding.etStep.text.toString().trim()
             if (step.isNotEmpty()) {
@@ -63,14 +138,86 @@ class CreateRecipeFragment : Fragment() {
             }
         }
 
+        // Save Recipe
         binding.btnSaveRecipe.setOnClickListener {
             saveRecipe()
         }
     }
 
+//    private fun saveRecipe() {
+//        val recipeName = binding.etRecipeName.text.toString().trim()
+//
+//        if (recipeName.isEmpty()) {
+//            showToast("Please enter a recipe name")
+//            return
+//        }
+//
+//        if (ingredients.isEmpty()) {
+//            showToast("Please add at least one ingredient")
+//            return
+//        }
+//
+//        if (steps.isEmpty()) {
+//            showToast("Please add at least one step")
+//            return
+//        }
+//
+//        // Show loading state
+//        setLoadingState(true)
+//
+//        // Upload image first
+//        imageUri?.let { uri ->
+//            val imageRef = storage.reference.child("recipes/${UUID.randomUUID()}")
+//            imageRef.putFile(uri)
+//                .addOnSuccessListener {
+//                    imageRef.downloadUrl.addOnSuccessListener { imageUrl ->
+//                        // Create recipe object
+//                        val recipe = Recipe(
+//                            id = UUID.randomUUID().toString(),
+//                            name = recipeName,
+//                            ingredients = ingredients.toList(),
+//                            steps = steps.toList(),
+//                            imageUri = imageUrl.toString(),
+//                            prepTime = null,
+//                            difficulty = binding.spinnerDifficulty.selectedItem.toString(),
+//                            typeCuisine = binding.spinnerCuisine.selectedItem.toString(),
+//                            userId = auth.currentUser?.uid ?: "",
+//                            vegan = binding.cbVegan.isChecked,
+//                            vegetarian = binding.cbVegetarian.isChecked
+//                        )
+//
+//                        // Save to Firestore
+//                        saveToFirestore(recipe)
+//                    }
+//                }
+//                .addOnFailureListener { e ->
+//                    showToast("Image upload failed: ${e.message}")
+//                    setLoadingState(false)
+//                }
+//        } ?: run {
+//            // Create recipe without image
+//            val recipe = Recipe(
+//                id = UUID.randomUUID().toString(),
+//                name = recipeName,
+//                ingredients = ingredients.toList(),
+//                steps = steps.toList(),
+//                imageUri = null,
+//                prepTime = null,
+//                difficulty = binding.spinnerDifficulty.selectedItem.toString(),
+//                typeCuisine = binding.spinnerCuisine.selectedItem.toString(),
+//                userId = auth.currentUser?.uid ?: "",
+//                vegan = binding.cbVegan.isChecked,
+//                vegetarian = binding.cbVegetarian.isChecked
+//            )
+//
+//            saveToFirestore(recipe)
+//        }
+//    }
+
     private fun saveRecipe() {
         val recipeName = binding.etRecipeName.text.toString().trim()
 
+        // Validation checks
         if (recipeName.isEmpty()) {
             showToast("Please enter a recipe name")
             return
@@ -89,28 +236,69 @@ class CreateRecipeFragment : Fragment() {
         // Show loading state
         setLoadingState(true)
 
-        val recipe = Recipe(
-            id = UUID.randomUUID().toString(),
-            name = recipeName,
-            ingredients = ingredients.toList(),
-            steps = steps.toList(),
-            userId = auth.currentUser?.uid ?: "",
-            imageUri = null,
-            vegan = false,
-            vegetarian = false
-        )
-
-        saveToFirestore(recipe)
+        // Upload image first if an image is selected
+        if (imageUri != null) {
+            uploadImageAndSaveRecipe(recipeName)
+        } else {
+            // Save recipe without image
+            saveRecipeToFirestore(null)
+        }
     }
 
-    private fun saveToFirestore(recipe: Recipe) {
+    private fun uploadImageAndSaveRecipe(recipeName: String) {
+        // Ensure imageUri is not null
+        val uri = imageUri ?: run {
+            showToast("No image selected")
+            setLoadingState(false)
+            return
+        }
+
+        // Generate a unique filename
+        val filename = "recipe_image_${UUID.randomUUID()}.jpg"
+
+        // Create a reference to Firebase Storage
+        val imageRef = storage.reference.child("recipe_images/$filename")
+
+        // Upload image to Firebase Storage
+        imageRef.putFile(uri)
+            .addOnSuccessListener { taskSnapshot ->
+                // Get the download URL
+                imageRef.downloadUrl.addOnSuccessListener { downloadUri ->
+                    // Save recipe with image URL
+                    saveRecipeToFirestore(downloadUri.toString())
+                }
+            }
+            .addOnFailureListener { exception ->
+                // More detailed error logging
+                Log.e("ImageUpload", "Upload failed", exception)
+                showToast("Image upload failed: ${exception.localizedMessage}")
+                setLoadingState(false)
+            }
+    }
+
+    private fun saveRecipeToFirestore(imageUrl: String?) {
+        // Create recipe object
+        val recipe = Recipe(
+            id = UUID.randomUUID().toString(),
+            name = binding.etRecipeName.text.toString().trim(),
+            ingredients = ingredients.toList(),
+            steps = steps.toList(),
+            imageUri = imageUrl, // Can be null if no image
+            prepTime = null,
+            difficulty = binding.spinnerDifficulty.selectedItem.toString(),
+            typeCuisine = binding.spinnerCuisine.selectedItem.toString(),
+            userId = auth.currentUser?.uid ?: "",
+            vegan = binding.cbVegan.isChecked,
+            vegetarian = binding.cbVegetarian.isChecked
+        )
+
+        // Save to Firestore
         db.collection("recipes")
             .document(recipe.id)
             .set(recipe)
             .addOnSuccessListener {
                 showToast("Recipe saved successfully!")
                 setLoadingState(false)
-                // Navigate back to recipe list
                 findNavController().popBackStack()
             }
             .addOnFailureListener { e ->
@@ -131,13 +319,17 @@ class CreateRecipeFragment : Fragment() {
 
     private fun setLoadingState(isLoading: Boolean) {
         binding.apply {
-//            progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
             btnSaveRecipe.isEnabled = !isLoading
             btnAddIngredient.isEnabled = !isLoading
             btnAddStep.isEnabled = !isLoading
             etRecipeName.isEnabled = !isLoading
             etIngredient.isEnabled = !isLoading
             etStep.isEnabled = !isLoading
+            btnUploadImage.isEnabled = !isLoading
+            spinnerCuisine.isEnabled = !isLoading
+            spinnerDifficulty.isEnabled = !isLoading
+            cbVegan.isEnabled = !isLoading
+            cbVegetarian.isEnabled = !isLoading
         }
     }
 

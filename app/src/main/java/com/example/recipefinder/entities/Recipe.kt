@@ -5,6 +5,8 @@ import com.google.firebase.firestore.PropertyName
 import android.os.Parcel
 import android.os.Parcelable
 
+
+
 data class Recipe(
     @DocumentId
     val id: String = "",  // Firebase document ID
@@ -20,6 +22,18 @@ data class Recipe(
 
     @PropertyName("imageUri")
     var imageUri: String? = null,
+
+    @PropertyName("type of Cuisine")
+    var typeCuisine: String? = null,
+
+    @PropertyName("Difficulty of the Recipe")
+    var difficulty: String? = null,
+
+    @PropertyName("prepTime")
+    var prepTime: String? = null,
+
+    @PropertyName("cookingTime")
+    var cookingTime: String? = null,
 
     @PropertyName("userId")
     var userId: String = "",
@@ -38,9 +52,9 @@ data class Recipe(
         parcel.createStringArrayList() ?: listOf(),
         parcel.createStringArrayList() ?: listOf(),
         parcel.readString(),
-        parcel.readString() ?: "",
-        parcel.readByte() != 0.toByte(),
-        parcel.readByte() != 0.toByte()
+        userId = parcel.readString() ?: "",
+        vegan = parcel.readByte() != 0.toByte(),
+        vegetarian = parcel.readByte() != 0.toByte()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

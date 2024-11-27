@@ -1,5 +1,8 @@
 [versions]
 agp = "8.7.1"
+androidxNavigationFragmentKtx = "2.7.0"
+androidxNavigationUiKtx = "2.7.0"
+firebaseStorageVersion = "17.0.0"
 googleServices = "4.4.2"
 gradle = "8.1.4"
 kotlin = "1.9.24"
@@ -12,6 +15,7 @@ material = "1.12.0"
 activity = "1.9.3"
 constraintlayout = "2.2.0"
 navigationFragmentKtx = "2.8.3"
+navigationSafeArgsGradlePlugin = "2.8.4"
 navigationUiKtx = "2.8.3"
 googleGmsGoogleServices = "4.4.2"
 firebaseDatabase = "21.0.0"
@@ -19,15 +23,20 @@ firebaseAuth = "23.1.0"
 firebaseAnalytics = "22.1.2"
 firebaseStorage = "21.0.1"
 firebaseAppcheckPlayintegrity = "18.0.0"
+picasso = "2.71828"
 uiTestAndroid = "1.7.5"
 lifecycleLivedataKtx = "2.8.7"
 lifecycleViewmodelKtx = "2.8.7"
 roomCommon = "2.6.1"
 roomKtx = "2.6.1"
 firebaseFirestoreKtx = "25.1.1"
+firebaseFirestore = "25.1.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-navigation-safe-args-gradle-plugin = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigationSafeArgsGradlePlugin" }
+androidx-navigation-ui-ktx-v270 = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "androidxNavigationUiKtx" }
+firebase-storage-v1700 = { module = "com.google.firebase:firebase-storage", version.ref = "firebaseStorageVersion" }
 google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -50,6 +59,9 @@ androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifec
 androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
+navigation-fragment-ktx-v270 = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "androidxNavigationFragmentKtx" }
+picasso = { module = "com.squareup.picasso:picasso", version.ref = "picasso" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

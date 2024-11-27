@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:layout_marginBottom="16dp">
 
         <TextView
@@ -35,7 +35,8 @@
             android:text="Community"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:layout_marginEnd="80dp"/>
 
         <TextView
             android:id="@+id/tv_browse"
@@ -44,8 +45,8 @@
             android:text="Browse"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:layout_marginLeft="170dp"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:layout_marginStart="16dp"/>
     </LinearLayout>
 
     <!-- Search Bar -->
@@ -108,7 +109,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="3"
+
         android:layout_marginBottom="16dp">
 
         <LinearLayout
@@ -118,58 +119,20 @@
             android:orientation="vertical"
             android:gravity="center_horizontal">
 
-            <ImageView
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_featured_recipes"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="#D3D3D3" />
-
-            <TextView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Dish #1"
-                android:layout_marginTop="4dp"
-                android:textColor="#000000" />
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center_horizontal">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="#D3D3D3" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Dish #2"
-                android:layout_marginTop="4dp"
-                android:textColor="#000000" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center_horizontal">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="#D3D3D3" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Dish #3"
-                android:layout_marginTop="4dp"
-                android:textColor="#000000" />
-        </LinearLayout>
+<!--        <LinearLayout-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:orientation="vertical"-->
+<!--            android:gravity="center_horizontal"/>-->
     </LinearLayout>
 
     <!-- Recommendations Section -->
