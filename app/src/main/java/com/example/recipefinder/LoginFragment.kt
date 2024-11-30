@@ -145,7 +145,6 @@ class LoginFragment : Fragment() {
                 } else {
                     // Login failed
                     Toast.makeText(activity, task.exception?.message, Toast.LENGTH_LONG).show()
-
                     // Call the result callback
                     onResult(false)
                 }

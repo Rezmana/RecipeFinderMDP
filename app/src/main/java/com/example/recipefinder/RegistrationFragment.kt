@@ -13,6 +13,8 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
+
 
 class RegistrationFragment : Fragment() {
     private lateinit var emailInput: EditText
@@ -26,8 +28,11 @@ class RegistrationFragment : Fragment() {
     private lateinit var confirmPasswordLayout: TextInputLayout
     private lateinit var usernameLayout: TextInputLayout
 
+
     // Firebase Auth instance
     private lateinit var auth: FirebaseAuth
+
+    private val firestore = FirebaseFirestore.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,6 +48,7 @@ class RegistrationFragment : Fragment() {
 
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
+
 
 
         // Initialize views
@@ -125,23 +131,47 @@ class RegistrationFragment : Fragment() {
         return isValid
     }
 
+
     private fun performRegistration() {
         val email = emailInput.text.toString().trim()
         val password = passwordInput.text.toString().trim()
+        val username = usernameInput.text.toString().trim()
 
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(requireActivity()) { task ->
                 if (task.isSuccessful) {
                     val user = auth.currentUser
-                    Toast.makeText(context,"SignUp Successful", Toast.LENGTH_SHORT).show();
-                    updateUI(user)
+                    if (user != null) {
+                        saveUsernameToFirestore(user.uid, username)
+//                        Toast.makeText(context,"Registration Successful", Toast.LENGTH_SHORT).show();
+                        updateUI(user)
+                    } else {
+                        Toast.makeText(context, "User is null", Toast.LENGTH_SHORT).show()
+
+                    }
                 } else {
                     Toast.makeText(
                         context, "Registration failed: ${task.exception?.message}",
                         Toast.LENGTH_LONG
                     ).show()
-                    updateUI(null)
                 }
+            }
+    }
+
+    private fun saveUsernameToFirestore(userId: String, username: String) {
+        val userData = mapOf(
+            "username" to username,
+            "email" to emailInput.text.toString().trim()
+        )
+
+        firestore.collection("users").document(userId)
+            .set(userData)
+            .addOnSuccessListener {
+                Toast.makeText(context, "User profile created!", Toast.LENGTH_SHORT).show()
+                updateUI(auth.currentUser)
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(context, "Failed to save user data: ${e.message}", Toast.LENGTH_LONG).show()
             }
     }
 

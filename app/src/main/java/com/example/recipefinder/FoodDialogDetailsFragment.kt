@@ -12,12 +12,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.recipefinder.entities.Recipe
 import com.squareup.picasso.Picasso
 
-class FoodDetailsFragment : DialogFragment() {
+class FoodDialogDetailsFragment : DialogFragment() {
 
-    private val args: FoodDetailsFragmentArgs by navArgs()
+    private val args: FoodDialogDetailsFragmentArgs by navArgs()
 
     private lateinit var foodPicture: ImageView
+    private lateinit var userName : TextView
     private lateinit var foodName: TextView
+    private lateinit var recipeDescription : TextView
     private lateinit var typeCuisine: TextView
     private lateinit var difficulty: TextView
     private lateinit var prepTime: TextView
@@ -25,11 +27,6 @@ class FoodDetailsFragment : DialogFragment() {
     private lateinit var veganTag: TextView
     private lateinit var vegetarianTag: TextView
     private lateinit var ingredientsList: LinearLayout
-    private lateinit var stepsList: TextView
-    private lateinit var commentInput: EditText
-    private lateinit var addCommentButton: Button
-    private lateinit var commentsRecyclerView: RecyclerView
-    private lateinit var commentsAdapter: CommentsAdapter
     private val commentsList = mutableListOf<Comment>()
 
     override fun onCreateView(
@@ -43,9 +40,12 @@ class FoodDetailsFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Initialize views
+
         foodPicture = view.findViewById(R.id.foodPicture)
+        recipeDescription = view.findViewById(R.id.etDialogFoodDescription)
         foodName = view.findViewById(R.id.foodName)
         typeCuisine = view.findViewById(R.id.cookingTypes)
+        userName = view.findViewById(R.id.author)
 //        difficulty = view.findViewById(R.id.diet)
 //        prepTime = view.findViewById(R.id.totalServings) // Reusing the view ID for simplicity
 //        cookingTime = view.findViewById(R.id.totalServings)
@@ -53,36 +53,19 @@ class FoodDetailsFragment : DialogFragment() {
 //        vegetarianTag = view.findViewById(R.id.vegetarianTag)
         ingredientsList = view.findViewById(R.id.ingredientsList)
 //        stepsList = view.findViewById(R.id.stepsList)
-        commentInput = view.findViewById(R.id.commentInput)
-        addCommentButton = view.findViewById(R.id.addCommentButton)
-        commentsRecyclerView = view.findViewById(R.id.commentsRecyclerView)
 
         // Set up RecyclerView for comments
-        commentsAdapter = CommentsAdapter(commentsList)
-        commentsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        commentsRecyclerView.adapter = commentsAdapter
 
         // Load recipe details from arguments
         val recipe: Recipe = args.recipe
         displayFoodDetails(recipe)
 
         // Add Comment Button functionality
-        addCommentButton.setOnClickListener {
-            val commentText = commentInput.text.toString()
-            if (commentText.isNotBlank()) {
-                val newComment = Comment(userName = "User", commentText = commentText)
-                commentsAdapter.addComment(newComment)
-                commentInput.text.clear()
-                commentsRecyclerView.scrollToPosition(commentsList.size - 1)
-            } else {
-                Toast.makeText(requireContext(), "Comment cannot be empty", Toast.LENGTH_SHORT).show()
-            }
-        }
     }
 
     companion object {
-        fun newInstance(recipe: Recipe): FoodDetailsFragment {
-            val fragment = FoodDetailsFragment()
+        fun newInstance(recipe: Recipe): FoodDialogDetailsFragment {
+            val fragment = FoodDialogDetailsFragment()
             val args = Bundle().apply {
                 putParcelable("recipe", recipe)
             }
@@ -93,11 +76,13 @@ class FoodDetailsFragment : DialogFragment() {
 
     private fun displayFoodDetails(recipe: Recipe) {
         foodName.text = recipe.recipeName
+        userName.text = recipe.userName
+        recipeDescription.text = recipe.recipeDescription
 //        typeCuisine.text = "Cuisine: ${recipe.typeCuisine ?: "N/A"}"
         typeCuisine.text = "${recipe.typeCuisine ?: "N/A"}"
-        difficulty.text = "Difficulty: ${recipe.difficulty ?: "N/A"}"
-        prepTime.text = "Prep Time: ${recipe.prepTime ?: "N/A"}"
-        cookingTime.text = "Cooking Time: ${recipe.cookingTime ?: "N/A"}"
+//        difficulty.text = "Difficulty: ${recipe.difficulty ?: "N/A"}"
+//        prepTime.text = "Prep Time: ${recipe.prepTime ?: "N/A"}"
+//        cookingTime.text = "Cooking Time: ${recipe.cookingTime ?: "N/A"}"
 
 //        veganTag.visibility = if (recipe.vegan) View.VISIBLE else View.GONE
 //        vegetarianTag.visibility = if (recipe.vegetarian) View.VISIBLE else View.GONE

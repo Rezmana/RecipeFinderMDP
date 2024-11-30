@@ -7,25 +7,28 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.recipefinder.FeaturedRecipeAdapter
+import com.example.recipefinder.RecipeAdapter
+import com.example.recipefinder.FoodDetailsFragment
+import com.example.recipefinder.FoodDialogDetailsFragment
 import com.example.recipefinder.R
 import com.example.recipefinder.entities.Recipe
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Calendar
 
 class HomeFragment : Fragment() {
     private lateinit var tvGreeting: TextView
     private lateinit var tvCommunity: TextView
+    private lateinit var tvUser: TextView
     private lateinit var tvBrowse: TextView
     private lateinit var tvFeatured: TextView
     private lateinit var tvSeeMoreFeatured: TextView
     private lateinit var tvRecommendation: TextView
     private lateinit var tvSeeMoreRecommendation: TextView
     private lateinit var featuredRecyclerView: RecyclerView
-    private lateinit var featuredRecipeAdapter: FeaturedRecipeAdapter
+    private lateinit var recipeAdapter: RecipeAdapter
     private val firestore = FirebaseFirestore.getInstance()
 
     override fun onCreateView(
@@ -42,6 +45,7 @@ class HomeFragment : Fragment() {
 
         // Initialize views
         tvGreeting = view.findViewById(R.id.tv_greeting)
+//        tvUser = view.findViewById(R.id.tv_user)
         tvCommunity = view.findViewById(R.id.tv_community)
         tvBrowse = view.findViewById(R.id.tv_browse)
         tvFeatured = view.findViewById(R.id.tv_featured)
@@ -50,13 +54,13 @@ class HomeFragment : Fragment() {
         tvSeeMoreRecommendation = view.findViewById(R.id.tv_see_more_recommendation)
 
         featuredRecyclerView = view.findViewById(R.id.rv_featured_recipes)
-        featuredRecipeAdapter = FeaturedRecipeAdapter { recipe ->
+        recipeAdapter = RecipeAdapter { recipe ->
             navigateToFoodDetails(recipe)
         }
 
         featuredRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = featuredRecipeAdapter
+            adapter = recipeAdapter
         }
 
         // Fetch featured recipes from Firestore
@@ -70,12 +74,10 @@ class HomeFragment : Fragment() {
 
     private fun fetchFeaturedRecipes() {
         firestore.collection("recipes")
-            //TODO:UNCOmment this out
-//            .limit(5)
             .get()
             .addOnSuccessListener { querySnapshot ->
                 val recipes = querySnapshot.toObjects(Recipe::class.java)
-                featuredRecipeAdapter.updateRecipes(recipes)
+                recipeAdapter.updateRecipes(recipes)
             }
             .addOnFailureListener { exception ->
                 // Handle error
@@ -84,38 +86,51 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
-        // Example navigation or action listeners
         tvCommunity.setOnClickListener {
-            // Navigate to Community fragment
-            // findNavController().navigate(R.id.action_homeFragment_to_communityFragment)
+            // Placeholder for navigation to Community fragment
         }
 
         tvBrowse.setOnClickListener {
-            // Navigate to Browse fragment
-            // findNavController().navigate(R.id.action_homeFragment_to_browseFragment)
+            // Placeholder for navigation to Browse fragment
+            val dialogFragment = FoodDialogDetailsFragment()
+            dialogFragment.show(parentFragmentManager, "FoodDetailsDialogFragment")
         }
 
         tvSeeMoreFeatured.setOnClickListener {
-            // Navigate to Featured section
-            // findNavController().navigate(R.id.action_homeFragment_to_featuredFragment)
+            // Placeholder for navigation to Featured section
         }
 
         tvSeeMoreRecommendation.setOnClickListener {
-            // Navigate to Recommendations
-            // findNavController().navigate(R.id.action_homeFragment_to_recommendationsFragment)
+            // Placeholder for navigation to Recommendations
         }
     }
 
     private fun updateGreeting() {
-        // You can customize this to show user-specific greeting
-        val currentTime = System.currentTimeMillis()
         val greeting = when (getCurrentTimeOfDay()) {
-            "morning" -> "Good Morning!"
-            "afternoon" -> "Good Afternoon!"
-            "evening" -> "Good Evening!"
-            else -> "Hello User!"
+            "morning" -> "Good Morning"
+            "afternoon" -> "Good Afternoon"
+            "evening" -> "Good Evening"
+            else -> "Hello"
         }
-        tvGreeting.text = greeting
+
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            val userId = user.uid
+            // Fetch username from Firestore
+            FirebaseFirestore.getInstance().collection("users")
+                .document(userId)
+                .get()
+                .addOnSuccessListener { document ->
+                    val username = document.getString("username") ?: "User"
+                    tvGreeting.text = "$greeting, $username!"
+                }
+                .addOnFailureListener {
+                    tvGreeting.text = "$greeting, User!" // Fallback
+                    Toast.makeText(context, "Failed to fetch username", Toast.LENGTH_SHORT).show()
+                }
+        } else {
+            tvGreeting.text = "$greeting, User!" // Fallback if no user is logged in
+        }
     }
 
     private fun getCurrentTimeOfDay(): String {
@@ -128,8 +143,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun navigateToFoodDetails(recipe: Recipe) {
-        val action = HomeFragmentDirections.actionNavigationHomeToFoodDetailsFragment(recipe)
-        findNavController().navigate(action)
+        val dialogFragment = FoodDialogDetailsFragment.newInstance(recipe)
+        dialogFragment.show(parentFragmentManager, "FoodDetailsDialogFragment")
     }
 
     companion object {

@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="?attr/actionBarSize"
     android:layout_marginBottom="?actionBarSize">
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,6 +38,14 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:hint="Recipe Name"
+            android:inputType="text"
+            android:layout_marginTop="16dp"
+            android:maxLines="1" />
+        <EditText
+            android:id="@+id/etRecipeDescription"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Add A Description"
             android:inputType="text"
             android:layout_marginTop="16dp"
             android:maxLines="1" />

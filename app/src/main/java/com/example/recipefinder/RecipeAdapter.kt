@@ -9,14 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.recipefinder.entities.Recipe
 import com.squareup.picasso.Picasso
 
-class FeaturedRecipeAdapter(
+class RecipeAdapter(
     private val onRecipeClick: (Recipe) -> Unit // Callback for item clicks
-) : RecyclerView.Adapter<FeaturedRecipeAdapter.RecipeViewHolder>() {
+) : RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>() {
 
     private val recipes = mutableListOf<Recipe>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_featured_recipe, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_recipe, parent, false)
         return RecipeViewHolder(view)
     }
 
@@ -38,7 +38,7 @@ class FeaturedRecipeAdapter(
         private val recipeName: TextView = itemView.findViewById(R.id.tv_recipe_name)
 
         fun bind(recipe: Recipe) {
-            recipeName.text = recipe.name
+            recipeName.text = recipe.recipeName
             Picasso.get()
                 .load(recipe.imageUri) // Replace Glide with Picasso
                 .placeholder(R.drawable.background_placeholder) // Optional: Add a placeholder image

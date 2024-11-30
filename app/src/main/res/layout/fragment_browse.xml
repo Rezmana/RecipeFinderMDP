@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Back and Settings Icons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp">
+
+        <ImageView
+            android:id="@+id/backIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/baseline_arrow_back_24"
+            android:contentDescription="Back Icon" />
+
+    </LinearLayout>
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Browse"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="8dp" />
+
+    <!-- Search Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/light_blue_600"
+        android:padding="8dp"
+        android:elevation="4dp"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <EditText
+            android:id="@+id/searchBar"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:hint="Search"
+            android:padding="8dp"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/searchIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/baseline_search_24"
+            android:contentDescription="Search Icon" />
+    </LinearLayout>
+
+    <!-- Browse by Ingredients Section -->
+    <TextView
+        android:id="@+id/tvBrowseByIngredients"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Browse by Ingredients"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:paddingBottom="8dp" />
+
+    <GridLayout
+        android:id="@+id/ingredientGrid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="4"
+        android:rowCount="2"
+        android:paddingBottom="8dp">
+
+        <!-- Placeholder for Ingredients -->
+        <View
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:background="@drawable/baseline_bakery_dining_24" />
+
+
+        <View
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:background="@drawable/baseline_bakery_dining_24" />
+
+        <View
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:background="@drawable/baseline_bakery_dining_24" />
+
+        <View
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:background="@drawable/baseline_bakery_dining_24" />
+
+        <View
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:background="@drawable/baseline_bakery_dining_24" />
+
+        <View
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:background="@drawable/baseline_bakery_dining_24" />
+    </GridLayout>
+
+    <TextView
+        android:id="@+id/tvSelectMore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select More"
+        android:textSize="14sp"
+        android:layout_gravity="end"
+        android:textColor="@android:color/darker_gray"
+        android:paddingBottom="16dp" />
+
+    <!-- Recipes and Dishes Section -->
+
+    <!-- Tags Section -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="16dp">
+
+        <LinearLayout
+            android:id="@+id/cuisineTypeTags"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/cardview_dark_background"
+            android:orientation="horizontal">
+        </LinearLayout>
+    </HorizontalScrollView>
+
+
+    <!-- Recipes/Dishes Grid Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/browse_display_recipes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

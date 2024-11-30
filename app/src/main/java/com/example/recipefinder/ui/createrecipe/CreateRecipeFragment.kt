@@ -27,6 +27,7 @@ class CreateRecipeFragment : Fragment() {
 
     private val ingredients = mutableListOf<String>()
     private val steps = mutableListOf<String>()
+    private val recipeDescription = String
 
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
@@ -216,6 +217,7 @@ class CreateRecipeFragment : Fragment() {
 
     private fun saveRecipe() {
         val recipeName = binding.etRecipeName.text.toString().trim()
+        val recipeDescription = binding.etRecipeDescription.text.toString().trim()
 
         // Validation checks
         if (recipeName.isEmpty()) {
@@ -225,6 +227,11 @@ class CreateRecipeFragment : Fragment() {
 
         if (ingredients.isEmpty()) {
             showToast("Please add at least one ingredient")
+            return
+        }
+
+        if (recipeDescription.isEmpty()){
+            showToast("Please add a description")
             return
         }
 
@@ -238,14 +245,14 @@ class CreateRecipeFragment : Fragment() {
 
         // Upload image first if an image is selected
         if (imageUri != null) {
-            uploadImageAndSaveRecipe(recipeName)
+            uploadImageAndSaveRecipe()
         } else {
             // Save recipe without image
             saveRecipeToFirestore(null)
         }
     }
 
-    private fun uploadImageAndSaveRecipe(recipeName: String) {
+    private fun uploadImageAndSaveRecipe() {
         // Ensure imageUri is not null
         val uri = imageUri ?: run {
             showToast("No image selected")
@@ -277,10 +284,18 @@ class CreateRecipeFragment : Fragment() {
     }
 
     private fun saveRecipeToFirestore(imageUrl: String?) {
+        val userId = auth.currentUser?.uid
+
+        val firestore = FirebaseFirestore.getInstance()
         // Create recipe object
+
+
+
         val recipe = Recipe(
             id = UUID.randomUUID().toString(),
-            name = binding.etRecipeName.text.toString().trim(),
+            userName = auth.currentUser?.displayName ?: "",
+            recipeName = binding.etRecipeName.text.toString().trim(),
+            recipeDescription = binding.etRecipeDescription.text.toString().trim(),
             ingredients = ingredients.toList(),
             steps = steps.toList(),
             imageUri = imageUrl, // Can be null if no image

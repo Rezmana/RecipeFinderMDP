@@ -11,16 +11,16 @@
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home">
     <action
-        android:id="@+id/action_navigation_home_to_foodDetailsFragment"
-        app:destination="@id/foodDetailsFragment" />
+        android:id="@+id/action_navigation_home_to_foodDialogDetailsFragment"
+        app:destination="@id/foodDialogDetailsFragment" />
 
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_saved_recipe"
         android:name="com.example.recipefinder.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_saved_recipe" />
     <fragment
         android:id="@+id/navigation_create_recipe"
         android:name="com.example.recipefinder.ui.createrecipe.CreateRecipeFragment"
@@ -34,6 +34,24 @@
             android:name="recipe"
             app:argType="com.example.recipefinder.entities.Recipe" />
     </fragment>
+    <fragment
+        android:id="@+id/foodDialogDetailsFragment"
+        android:name="com.example.recipefinder.FoodDialogDetailsFragment"
+        android:label="Food Dialog Details">
+        <argument
+            android:name="recipe"
+            app:argType="com.example.recipefinder.entities.Recipe" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.example.recipefinder.ui.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/fragment_browse"
+        android:name="com.example.recipefinder.BrowseFragment"
+        android:label="fragment_browse"
+        tools:layout="@layout/fragment_browse" />
 
 
 </navigation>
