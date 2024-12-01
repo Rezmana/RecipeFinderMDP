@@ -1,5 +1,6 @@
 package com.example.recipefinder
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,13 +23,10 @@ class RegistrationFragment : Fragment() {
     private lateinit var confirmPasswordInput: EditText
     private lateinit var usernameInput: EditText
     private lateinit var continueButton: Button
-
     private lateinit var emailLayout: TextInputLayout
     private lateinit var passwordLayout: TextInputLayout
     private lateinit var confirmPasswordLayout: TextInputLayout
     private lateinit var usernameLayout: TextInputLayout
-
-
     // Firebase Auth instance
     private lateinit var auth: FirebaseAuth
 
@@ -45,17 +43,11 @@ class RegistrationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
-
-
-
         // Initialize views
         initializeViews(view)
         setupListeners()
-
-
     }
 
     private fun initializeViews(view: View) {
@@ -131,7 +123,6 @@ class RegistrationFragment : Fragment() {
         return isValid
     }
 
-
     private fun performRegistration() {
         val email = emailInput.text.toString().trim()
         val password = passwordInput.text.toString().trim()
@@ -144,6 +135,7 @@ class RegistrationFragment : Fragment() {
                     if (user != null) {
                         saveUsernameToFirestore(user.uid, username)
 //                        Toast.makeText(context,"Registration Successful", Toast.LENGTH_SHORT).show();
+                        saveUserToSharedPreferences(user.uid, username, email)
                         updateUI(user)
                     } else {
                         Toast.makeText(context, "User is null", Toast.LENGTH_SHORT).show()
@@ -173,6 +165,21 @@ class RegistrationFragment : Fragment() {
             .addOnFailureListener { e ->
                 Toast.makeText(context, "Failed to save user data: ${e.message}", Toast.LENGTH_LONG).show()
             }
+    }
+
+    private fun saveUserToSharedPreferences(userId: String, username: String, email: String) {
+        val sharedPreferences = requireContext().getSharedPreferences("userPrefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+
+        // Save data to SharedPreferences
+        editor.putString("userId", userId)
+        editor.putString("username", username)
+        editor.putString("email", email)
+        editor.putBoolean("isLoggedIn", true)
+
+        // Apply changes
+        editor.clear()
+        editor.apply()
     }
 
     private fun updateUI(user: FirebaseUser?) {

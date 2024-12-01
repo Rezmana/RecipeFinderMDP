@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.DialogFragment
@@ -113,6 +114,14 @@ class FoodDialogDetailsFragment : DialogFragment() {
             }
             ingredientsList.addView(ingredientView)
         }
+    }
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.setLayout(
+            (resources.displayMetrics.widthPixels * 0.85).toInt(),
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
+        dialog?.window?.setBackgroundDrawableResource(android.R.color.white)
     }
     private fun saveRecipeForUser(recipe: Recipe) {
         // Get current user's ID

@@ -197,6 +197,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Save Recipe"/>
-
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/loadingSpinner"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            app:lottie_rawRes="@raw/loading_animation"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            android:visibility="gone" />
     </LinearLayout>
+
 </ScrollView>

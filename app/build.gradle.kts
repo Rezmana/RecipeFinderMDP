@@ -65,6 +65,8 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation (libs.navigation.fragment.ktx.v270)
     implementation (libs.androidx.navigation.ui.ktx.v270)
+    implementation (libs.kotlinx.coroutines.android)
+    implementation (libs.android.lottie)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

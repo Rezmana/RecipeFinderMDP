@@ -1,11 +1,9 @@
 package com.example.recipefinder.entities
 
-import android.os.Parcel
-import android.os.Parcelable
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.PropertyName
 
-class User {
+class users {
     @DocumentId
     private val username: String? = null
 
