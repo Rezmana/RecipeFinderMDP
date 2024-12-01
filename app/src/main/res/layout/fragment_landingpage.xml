@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:id="@+id/main"
-    tools:context=".MainActivity">
+    tools:context=".LandingActivity">
 
     <!-- AppBar with Toolbar -->
     <com.google.android.material.appbar.AppBarLayout

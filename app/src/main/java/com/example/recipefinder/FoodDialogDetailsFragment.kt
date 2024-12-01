@@ -5,11 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipefinder.entities.Recipe
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 
 class FoodDialogDetailsFragment : DialogFragment() {
@@ -21,13 +24,11 @@ class FoodDialogDetailsFragment : DialogFragment() {
     private lateinit var foodName: TextView
     private lateinit var recipeDescription : TextView
     private lateinit var typeCuisine: TextView
-    private lateinit var difficulty: TextView
-    private lateinit var prepTime: TextView
-    private lateinit var cookingTime: TextView
-    private lateinit var veganTag: TextView
-    private lateinit var vegetarianTag: TextView
     private lateinit var ingredientsList: LinearLayout
-    private val commentsList = mutableListOf<Comment>()
+    private lateinit var btnSaveRecipe : AppCompatImageButton
+
+    private val commentsList = mutableListOf<Comments>()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,19 +47,18 @@ class FoodDialogDetailsFragment : DialogFragment() {
         foodName = view.findViewById(R.id.foodName)
         typeCuisine = view.findViewById(R.id.cookingTypes)
         userName = view.findViewById(R.id.author)
-//        difficulty = view.findViewById(R.id.diet)
-//        prepTime = view.findViewById(R.id.totalServings) // Reusing the view ID for simplicity
-//        cookingTime = view.findViewById(R.id.totalServings)
-//        veganTag = view.findViewById(R.id.vegan)
-//        vegetarianTag = view.findViewById(R.id.vegetarianTag)
         ingredientsList = view.findViewById(R.id.ingredientsList)
-//        stepsList = view.findViewById(R.id.stepsList)
+        btnSaveRecipe = view.findViewById(R.id.btnSaveRecipe)
 
         // Set up RecyclerView for comments
 
         // Load recipe details from arguments
         val recipe: Recipe = args.recipe
         displayFoodDetails(recipe)
+
+        btnSaveRecipe.setOnClickListener {
+            saveRecipeForUser(recipe)
+        }
 
         // Add Comment Button functionality
     }
@@ -78,17 +78,8 @@ class FoodDialogDetailsFragment : DialogFragment() {
         foodName.text = recipe.recipeName
         userName.text = recipe.userName
         recipeDescription.text = recipe.recipeDescription
-//        typeCuisine.text = "Cuisine: ${recipe.typeCuisine ?: "N/A"}"
         typeCuisine.text = "${recipe.typeCuisine ?: "N/A"}"
-//        difficulty.text = "Difficulty: ${recipe.difficulty ?: "N/A"}"
-//        prepTime.text = "Prep Time: ${recipe.prepTime ?: "N/A"}"
-//        cookingTime.text = "Cooking Time: ${recipe.cookingTime ?: "N/A"}"
-
-//        veganTag.visibility = if (recipe.vegan) View.VISIBLE else View.GONE
-//        vegetarianTag.visibility = if (recipe.vegetarian) View.VISIBLE else View.GONE
-
-//        ingredientsList.text = "Ingredients:\n" + recipe.ingredients.joinToString(separator = "\n") { "- $it" }
-//        stepsList.text = "Steps:\n" + recipe.steps.joinToString(separator = "\n") { "$it" }
+//
 
         // Load image using Picasso
         recipe.imageUri?.let {
@@ -122,6 +113,29 @@ class FoodDialogDetailsFragment : DialogFragment() {
             }
             ingredientsList.addView(ingredientView)
         }
+    }
+    private fun saveRecipeForUser(recipe: Recipe) {
+        // Get current user's ID
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId == null) {
+            Toast.makeText(context, "You need to log in to save recipes", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Reference to Firestore
+        val firestore = FirebaseFirestore.getInstance()
+
+        // Save recipe under user's savedRecipes subcollection
+        val userRef = firestore.collection("users").document(userId)
+        val savedRecipeRef = userRef.collection("savedRecipes").document(recipe.id)
+
+        savedRecipeRef.set(recipe)
+            .addOnSuccessListener {
+                Toast.makeText(context, "Recipe saved successfully!", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(context, "Failed to save recipe: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 }
 

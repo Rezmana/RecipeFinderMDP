@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.recipefinder.databinding.FragmentLandingpageBinding
 
-class landingpage : Fragment() {
+class LandingPage : Fragment() {
 
     private var _binding: FragmentLandingpageBinding? = null
     private val binding get() = _binding!!

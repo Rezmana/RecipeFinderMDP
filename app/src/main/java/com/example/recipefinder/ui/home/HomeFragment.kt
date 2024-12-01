@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.recipefinder.BrowseFragment
 import com.example.recipefinder.RecipeAdapter
 import com.example.recipefinder.FoodDetailsFragment
 import com.example.recipefinder.FoodDialogDetailsFragment
@@ -91,9 +93,7 @@ class HomeFragment : Fragment() {
         }
 
         tvBrowse.setOnClickListener {
-            // Placeholder for navigation to Browse fragment
-            val dialogFragment = FoodDialogDetailsFragment()
-            dialogFragment.show(parentFragmentManager, "FoodDetailsDialogFragment")
+            findNavController().navigate(R.id.action_navigation_home_to_browseFragment)
         }
 
         tvSeeMoreFeatured.setOnClickListener {

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class CommentsAdapter(private val comments: MutableList<Comment>) :
+class CommentsAdapter(private val comments: MutableList<Comments>) :
     RecyclerView.Adapter<CommentsAdapter.CommentViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
@@ -22,7 +22,7 @@ class CommentsAdapter(private val comments: MutableList<Comment>) :
 
     override fun getItemCount(): Int = comments.size
 
-    fun addComment(comment: Comment) {
+    fun addComment(comment: Comments) {
         comments.add(comment)
         notifyItemInserted(comments.size - 1)
     }

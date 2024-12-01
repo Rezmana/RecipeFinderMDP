@@ -122,7 +122,7 @@ class LoginFragment : Fragment() {
         FirebaseAuth.getInstance().signOut()
 
         // Navigate back to login screen
-        val intent = Intent(activity, MainActivity::class.java)
+        val intent = Intent(activity, LandingActivity::class.java)
         startActivity(intent)
         activity?.finish()
     }

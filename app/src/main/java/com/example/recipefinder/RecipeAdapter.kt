@@ -9,6 +9,58 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.recipefinder.entities.Recipe
 import com.squareup.picasso.Picasso
 
+//class RecipeAdapter(
+//    private val onRecipeClick: (Recipe) -> Unit // Callback for item clicks
+//) : RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>() {
+//
+//    private val recipes = mutableListOf<Recipe>()
+//
+//    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
+//        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_recipe, parent, false)
+//        return RecipeViewHolder(view)
+//    }
+//
+//    override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
+//        val recipe = recipes[position]
+//        holder.bind(recipe)
+//    }
+//
+//    override fun getItemCount(): Int = recipes.size
+//
+//    fun updateRecipes(newRecipes: List<Recipe>) {
+//        recipes.clear()
+//        recipes.addAll(newRecipes)
+//        notifyDataSetChanged()
+//    }
+//
+//    fun savedRecipes(savedRecipes: List<Recipe>) {
+//        recipes.clear()
+//        recipes.addAll(savedRecipes)
+//        notifyDataSetChanged()
+//    }
+//
+//
+//
+//    inner class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+//        private val recipeImage: ImageView = itemView.findViewById(R.id.iv_recipe_image)
+//        private val recipeName: TextView = itemView.findViewById(R.id.tv_recipe_name)
+//
+//        fun bind(recipe: Recipe) {
+//            recipeName.text = recipe.recipeName
+//            Picasso.get()
+//                .load(recipe.imageUri) // Replace Glide with Picasso
+//                .placeholder(R.drawable.background_placeholder) // Optional: Add a placeholder image
+////                .error(R.drawable.error_image) // Optional: Add an error image
+//                .fit() // Scales the image to fit ImageView dimensions
+//                .centerCrop() // Centers and crops the image
+//                .into(recipeImage)
+//
+//            itemView.setOnClickListener {
+//                onRecipeClick(recipe)
+//            }
+//        }
+//    }
+//}
 class RecipeAdapter(
     private val onRecipeClick: (Recipe) -> Unit // Callback for item clicks
 ) : RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>() {
@@ -27,6 +79,7 @@ class RecipeAdapter(
 
     override fun getItemCount(): Int = recipes.size
 
+    // Unified method to update recipes
     fun updateRecipes(newRecipes: List<Recipe>) {
         recipes.clear()
         recipes.addAll(newRecipes)
@@ -40,11 +93,10 @@ class RecipeAdapter(
         fun bind(recipe: Recipe) {
             recipeName.text = recipe.recipeName
             Picasso.get()
-                .load(recipe.imageUri) // Replace Glide with Picasso
-                .placeholder(R.drawable.background_placeholder) // Optional: Add a placeholder image
-//                .error(R.drawable.error_image) // Optional: Add an error image
-                .fit() // Scales the image to fit ImageView dimensions
-                .centerCrop() // Centers and crops the image
+                .load(recipe.imageUri)
+                .placeholder(R.drawable.background_placeholder)
+                .fit()
+                .centerCrop()
                 .into(recipeImage)
 
             itemView.setOnClickListener {

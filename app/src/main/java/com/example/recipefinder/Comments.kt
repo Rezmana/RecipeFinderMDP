@@ -1,6 +1,6 @@
 package com.example.recipefinder
 
-data class Comment(
+data class Comments(
     val userName: String,
     val commentText: String
 )

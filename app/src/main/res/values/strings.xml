@@ -7,9 +7,11 @@
     <string name="title_activity_dashboardapp">dashboardapp</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
+    <string name="title_saved_recipe">Collection</string>
     <string name="title_notifications">Notifications</string>
     <string name="profile">Profile</string>
     <string name="title_create_recipe">Create Recipe </string>
+    <string name="title_browse">Browse</string>
     <string-array name="cuisine_types">
         <item>Italian</item>
         <item>Mexican</item>

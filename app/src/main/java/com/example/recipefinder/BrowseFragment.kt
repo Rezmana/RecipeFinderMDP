@@ -4,15 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
+import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipefinder.entities.Recipe
+import com.google.firebase.firestore.FirebaseFirestore
 
 class BrowseFragment : Fragment() {
 
@@ -23,14 +27,13 @@ class BrowseFragment : Fragment() {
     private lateinit var browseDisplayRecipes: RecyclerView
     private lateinit var recipeAdapter: RecipeAdapter
 
+    private lateinit var ingredientGrid: GridLayout
+    private val allIngredients = listOf(
+        "Flour", "Sugar", "Eggs", "Milk", "Butter", "Salt",
+        "Tomatoes", "Chicken", "Cheese", "Rice", "Beans"
+    ) // Replace with your actual ingredient list
+
     private val sampleTags = listOf("German", "Japanese", "Middle Eastern", "Chinese", "Italian")
-    private val sampleRecipes = listOf(
-        Recipe("Dish #1", "https://via.placeholder.com/150"),
-        Recipe("Dish #2", "https://via.placeholder.com/150"),
-        Recipe("Dish #3", "https://via.placeholder.com/150"),
-        Recipe("Dish #4", "https://via.placeholder.com/150"),
-        Recipe("Dish #5", "https://via.placeholder.com/150")
-    )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,7 +53,17 @@ class BrowseFragment : Fragment() {
         cuisineTagsContainer = view.findViewById(R.id.cuisineTypeTags)
         browseDisplayRecipes = view.findViewById(R.id.browse_display_recipes)
 
+        ingredientGrid = view.findViewById(R.id.ingredientGrid)
+
+//        val recyclerView = view.findViewById<RecyclerView>(R.id.browse_display_recipes)
+        recipeAdapter = RecipeAdapter { recipe ->
+            Toast.makeText(context, "Clicked: ${recipe.recipeName}", Toast.LENGTH_SHORT).show()
+        }
+        browseDisplayRecipes.layoutManager = LinearLayoutManager(context)
+        browseDisplayRecipes.adapter = recipeAdapter
+
         // Set up listeners and RecyclerView
+        setupIngredientGrid()
         setupListeners()
         setupCuisineTags()
         setupRecipesRecyclerView()
@@ -60,13 +73,29 @@ class BrowseFragment : Fragment() {
         backIcon.setOnClickListener {
             Toast.makeText(requireContext(), "Back clicked!", Toast.LENGTH_SHORT).show()
             // Navigate back or handle the back action
+            findNavController().popBackStack() // Navigate back in the NavController stack
         }
 
         searchIcon.setOnClickListener {
             val query = searchBar.text.toString().trim()
             Toast.makeText(requireContext(), "Searching for: $query", Toast.LENGTH_SHORT).show()
             // Implement search functionality if needed
+
         }
+    }
+
+    private fun fetchAllRecipes() {
+        val firestore = FirebaseFirestore.getInstance()
+
+        firestore.collection("recipes")
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                val recipeList = querySnapshot.toObjects(Recipe::class.java)
+                recipeAdapter.updateRecipes(recipeList)
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(requireContext(), "Failed to fetch recipes: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun setupCuisineTags() {
@@ -93,20 +122,83 @@ class BrowseFragment : Fragment() {
 
     private fun setupRecipesRecyclerView() {
         recipeAdapter = RecipeAdapter { recipe ->
-            onRecipeClicked(recipe)
+            onRecipeClicked(recipe) // Handle clicks if needed
         }
+
         browseDisplayRecipes.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         browseDisplayRecipes.adapter = recipeAdapter
 
-        // Populate the adapter with sample data
-        recipeAdapter.updateRecipes(sampleRecipes)
+        // Fetch all recipes and populate the adapter
+        fetchAllRecipes()
     }
 
     private fun onTagClicked(tag: String) {
         Toast.makeText(requireContext(), "Tag clicked: $tag", Toast.LENGTH_SHORT).show()
         // Filter recipes based on the selected tag and update the adapter
-        val filteredRecipes = sampleRecipes.filter { it.recipeName.contains(tag, ignoreCase = true) }
-        recipeAdapter.updateRecipes(filteredRecipes)
+//        val filteredRecipes = sampleRecipes.filter { it.recipeName.contains(tag, ignoreCase = true) }
+//        recipeAdapter.updateRecipes(filteredRecipes)
+    }
+
+    private fun setupIngredientGrid() {
+        for (ingredient in allIngredients) {
+            val button = Button(requireContext()).apply {
+                text = ingredient
+                layoutParams = GridLayout.LayoutParams().apply {
+                    width = 0
+                    height = GridLayout.LayoutParams.WRAP_CONTENT
+                    columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                    rowSpec = GridLayout.spec(GridLayout.UNDEFINED)
+                    marginEnd = 8
+                    bottomMargin = 8
+                }
+                setOnClickListener {
+                    filterRecipesByIngredient(ingredient) // Call the Firestore filter function
+                }
+            }
+            ingredientGrid.addView(button)
+        }
+    }
+
+    private fun populateIngredientGrid() {
+        // Loop through the ingredient list and create buttons dynamically
+        for (ingredient in allIngredients) {
+            val button = Button(requireContext()).apply {
+                text = ingredient
+                layoutParams = GridLayout.LayoutParams().apply {
+                    width = 0 // Match parent
+                    height = GridLayout.LayoutParams.WRAP_CONTENT
+                    columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                    marginEnd = 8
+                    bottomMargin = 8
+                }
+
+                // Set click listener for each button
+                setOnClickListener {
+                    filterRecipesByIngredient(ingredient)
+                }
+            }
+
+            // Add the button to the GridLayout
+            ingredientGrid.addView(button)
+        }
+    }
+
+    private fun filterRecipesByIngredient(ingredient: String) {
+        val firestore = FirebaseFirestore.getInstance()
+
+        // Query Firestore for recipes containing the selected ingredient
+        firestore.collection("recipes")
+            .whereArrayContains("ingredients", ingredient)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                val filteredRecipes = querySnapshot.toObjects(Recipe::class.java)
+                recipeAdapter.updateRecipes(filteredRecipes)
+
+                Toast.makeText(context, "Filtered by: $ingredient", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(context, "Failed to load recipes: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun onRecipeClicked(recipe: Recipe) {

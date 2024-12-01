@@ -26,7 +26,7 @@
         tools:layout="@layout/fragment_allergies" />
     <fragment
         android:id="@+id/landingpage"
-        android:name="com.example.recipefinder.landingpage"
+        android:name="com.example.recipefinder.LandingPage"
         android:label="fragment_landingpage"
         tools:layout="@layout/fragment_landingpage" >
         <action

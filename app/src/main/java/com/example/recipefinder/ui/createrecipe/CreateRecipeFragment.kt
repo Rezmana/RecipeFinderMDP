@@ -289,8 +289,6 @@ class CreateRecipeFragment : Fragment() {
         val firestore = FirebaseFirestore.getInstance()
         // Create recipe object
 
-
-
         val recipe = Recipe(
             id = UUID.randomUUID().toString(),
             userName = auth.currentUser?.displayName ?: "",

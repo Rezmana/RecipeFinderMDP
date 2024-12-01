@@ -30,7 +30,7 @@ class FoodDetailsFragment : DialogFragment() {
     private lateinit var addCommentButton: Button
     private lateinit var commentsRecyclerView: RecyclerView
     private lateinit var commentsAdapter: CommentsAdapter
-    private val commentsList = mutableListOf<Comment>()
+    private val commentsList = mutableListOf<Comments>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,7 +70,7 @@ class FoodDetailsFragment : DialogFragment() {
         addCommentButton.setOnClickListener {
             val commentText = commentInput.text.toString()
             if (commentText.isNotBlank()) {
-                val newComment = Comment(userName = "User", commentText = commentText)
+                val newComment = Comments(userName = "User", commentText = commentText)
                 commentsAdapter.addComment(newComment)
                 commentInput.text.clear()
                 commentsRecyclerView.scrollToPosition(commentsList.size - 1)

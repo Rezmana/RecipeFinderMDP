@@ -8,7 +8,7 @@
     android:id="@+id/HomePage"
     android:background="#FFFFFF"
 
-    tools:context=".MainActivity">
+    tools:context=".LandingActivity">
 
 
     <!-- User Greeting -->

@@ -13,13 +13,21 @@
     <action
         android:id="@+id/action_navigation_home_to_foodDialogDetailsFragment"
         app:destination="@id/foodDialogDetailsFragment" />
-
+        <action
+            android:id="@+id/action_navigation_home_to_browseFragment"
+            app:destination="@id/navigation_browse" />
     </fragment>
 
     <fragment
+        android:id="@+id/navigation_browse"
+        android:name="com.example.recipefinder.BrowseFragment"
+        android:label="@string/title_browse"
+        tools:layout="@layout/fragment_browse" />
+
+    <fragment
         android:id="@+id/navigation_saved_recipe"
-        android:name="com.example.recipefinder.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
+        android:name="com.example.recipefinder.SavedRecipes"
+        android:label="@string/title_saved_recipe"
         tools:layout="@layout/fragment_saved_recipe" />
     <fragment
         android:id="@+id/navigation_create_recipe"
@@ -29,7 +37,8 @@
     <fragment
         android:id="@+id/foodDetailsFragment"
         android:name="com.example.recipefinder.FoodDetailsFragment"
-        android:label="Food Details">
+        android:label="Food Details"
+        tools:layout="@layout/fragment_view_food">
         <argument
             android:name="recipe"
             app:argType="com.example.recipefinder.entities.Recipe" />
@@ -37,7 +46,8 @@
     <fragment
         android:id="@+id/foodDialogDetailsFragment"
         android:name="com.example.recipefinder.FoodDialogDetailsFragment"
-        android:label="Food Dialog Details">
+        android:label="Food Dialog Details"
+        android:layout="@layout/fragment_dialog_food_details">
         <argument
             android:name="recipe"
             app:argType="com.example.recipefinder.entities.Recipe" />

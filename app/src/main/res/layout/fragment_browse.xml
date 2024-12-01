@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#FFFFFF"
     android:padding="16dp">
 
     <!-- Back and Settings Icons -->
@@ -79,40 +80,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:columnCount="4"
-        android:rowCount="2"
         android:paddingBottom="8dp">
-
-        <!-- Placeholder for Ingredients -->
-        <View
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:background="@drawable/baseline_bakery_dining_24" />
-
-
-        <View
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:background="@drawable/baseline_bakery_dining_24" />
-
-        <View
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:background="@drawable/baseline_bakery_dining_24" />
-
-        <View
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:background="@drawable/baseline_bakery_dining_24" />
-
-        <View
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:background="@drawable/baseline_bakery_dining_24" />
-
-        <View
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:background="@drawable/baseline_bakery_dining_24" />
     </GridLayout>
 
     <TextView
@@ -147,23 +115,21 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-
+        android:orientation="vertical"
         android:layout_marginBottom="16dp">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center_horizontal">
+            android:layout_marginBottom="16dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/browse_display_recipes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="16dp" />
         </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>
