@@ -7,89 +7,111 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.recipefinder.BrowseFragment
 import com.example.recipefinder.RecipeAdapter
-import com.example.recipefinder.FoodDetailsFragment
-import com.example.recipefinder.FoodDialogDetailsFragment
 import com.example.recipefinder.R
 import com.example.recipefinder.entities.Recipe
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Calendar
 
 class HomeFragment : Fragment() {
-    private lateinit var tvGreeting: TextView
-    private lateinit var tvCommunity: TextView
-    private lateinit var tvUser: TextView
-    private lateinit var tvBrowse: TextView
-    private lateinit var tvFeatured: TextView
-    private lateinit var tvSeeMoreFeatured: TextView
-    private lateinit var tvRecommendation: TextView
-    private lateinit var tvSeeMoreRecommendation: TextView
-    private lateinit var featuredRecyclerView: RecyclerView
+    private lateinit var viewModel: HomeViewModel
     private lateinit var recipeAdapter: RecipeAdapter
-    private val firestore = FirebaseFirestore.getInstance()
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
+    ): View {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize views
-        tvGreeting = view.findViewById(R.id.tv_greeting)
-//        tvUser = view.findViewById(R.id.tv_user)
-        tvCommunity = view.findViewById(R.id.tv_community)
-        tvBrowse = view.findViewById(R.id.tv_browse)
-        tvFeatured = view.findViewById(R.id.tv_featured)
-        tvSeeMoreFeatured = view.findViewById(R.id.tv_see_more_featured)
-        tvRecommendation = view.findViewById(R.id.tv_recommendation)
-        tvSeeMoreRecommendation = view.findViewById(R.id.tv_see_more_recommendation)
+        viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
-        featuredRecyclerView = view.findViewById(R.id.rv_featured_recipes)
-        recipeAdapter = RecipeAdapter { recipe ->
-            navigateToFoodDetails(recipe)
-        }
+        val tvGreeting = view.findViewById<TextView>(R.id.tv_greeting)
+        val tvCommunity = view.findViewById<TextView>(R.id.tv_community)
+        val tvBrowse = view.findViewById<TextView>(R.id.tv_browse)
+        val tvSeeMoreFeatured = view.findViewById<TextView>(R.id.tv_see_more_featured)
+        val tvSeeMoreRecommendation = view.findViewById<TextView>(R.id.tv_see_more_recommendation)
+        val featuredRecyclerView = view.findViewById<RecyclerView>(R.id.rv_featured_recipes)
 
-        featuredRecyclerView.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = recipeAdapter
-        }
+        // Initialize RecyclerView Adapter
+        recipeAdapter = RecipeAdapter(
+            recipes = listOf(), // Empty list initially
+            isManagingRecipes = false, // Disable delete button
+            onDeleteClick = {}, // No delete functionality in HomeFragment
+            onItemClick = { recipe -> navigateToFoodDetails(recipe) } // Handle item click
+        )
 
-        // Fetch featured recipes from Firestore
-        fetchFeaturedRecipes()
-        // Set up click listeners
-        setupClickListeners()
 
-        // Customize greeting (optional)
-        updateGreeting()
+        featuredRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        featuredRecyclerView.adapter = recipeAdapter
+
+        // Observe ViewModel
+        ObserveViewModel()
+
+        // Set up UI interactions
+        setupClickListeners(tvCommunity, tvBrowse, tvSeeMoreFeatured, tvSeeMoreRecommendation)
+
+        // Observe ViewModel
+//        viewModel.greeting.observe(viewLifecycleOwner) { greeting ->
+//            tvGreeting.text = greeting
+//        }
+//
+//        viewModel.featuredRecipes.observe(viewLifecycleOwner) { recipes ->
+//            recipeAdapter.updateRecipes(recipes)
+//        }
+//
+//        viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
+//            message?.let {
+//                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+//                viewModel.clearToastMessage()
+//            }
+//        }
+//
+//        // Click listeners
+//        tvCommunity.setOnClickListener {
+//            // Placeholder for Community navigation
+//        }
+//
+//        tvBrowse.setOnClickListener {
+//            findNavController().navigate(R.id.action_navigation_home_to_browseFragment)
+//        }
+//
+//        tvSeeMoreFeatured.setOnClickListener {
+//            // Placeholder for Featured section navigation
+//        }
+//
+//        tvSeeMoreRecommendation.setOnClickListener {
+//            // Placeholder for Recommendations navigation
+//        }
     }
 
-    private fun fetchFeaturedRecipes() {
-        firestore.collection("recipes")
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                val recipes = querySnapshot.toObjects(Recipe::class.java)
-                recipeAdapter.updateRecipes(recipes)
-            }
-            .addOnFailureListener { exception ->
-                // Handle error
-                Toast.makeText(context, "Failed to load recipes: ${exception.message}", Toast.LENGTH_SHORT).show()
-            }
+    private fun ObserveViewModel() {
+        viewModel.featuredRecipes.observe(viewLifecycleOwner) { recipes ->
+            recipeAdapter.updateRecipes(recipes) // Update adapter with new recipes
+        }
+
+        viewModel.greeting.observe(viewLifecycleOwner) { greeting ->
+            view?.findViewById<TextView>(R.id.tv_greeting)?.text = greeting
+        }
     }
 
-    private fun setupClickListeners() {
+    private fun setupClickListeners(
+        tvCommunity: TextView,
+        tvBrowse: TextView,
+        tvSeeMoreFeatured: TextView,
+        tvSeeMoreRecommendation: TextView
+    ) {
         tvCommunity.setOnClickListener {
-            // Placeholder for navigation to Community fragment
+            Toast.makeText(requireContext(), "Community clicked", Toast.LENGTH_SHORT).show()
         }
 
         tvBrowse.setOnClickListener {
@@ -97,57 +119,21 @@ class HomeFragment : Fragment() {
         }
 
         tvSeeMoreFeatured.setOnClickListener {
-            // Placeholder for navigation to Featured section
+            // Navigate to a FeaturedRecipesFragment (if implemented)
+            Toast.makeText(requireContext(), "See More Featured clicked", Toast.LENGTH_SHORT).show()
         }
 
         tvSeeMoreRecommendation.setOnClickListener {
-            // Placeholder for navigation to Recommendations
+            // Navigate to a RecommendationsFragment (if implemented)
+            Toast.makeText(requireContext(), "See More Recommendations clicked", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun updateGreeting() {
-        val greeting = when (getCurrentTimeOfDay()) {
-            "morning" -> "Good Morning"
-            "afternoon" -> "Good Afternoon"
-            "evening" -> "Good Evening"
-            else -> "Hello"
-        }
-
-        val user = FirebaseAuth.getInstance().currentUser
-        if (user != null) {
-            val userId = user.uid
-            // Fetch username from Firestore
-            FirebaseFirestore.getInstance().collection("users")
-                .document(userId)
-                .get()
-                .addOnSuccessListener { document ->
-                    val username = document.getString("username") ?: "User"
-                    tvGreeting.text = "$greeting, $username!"
-                }
-                .addOnFailureListener {
-                    tvGreeting.text = "$greeting, User!" // Fallback
-                    Toast.makeText(context, "Failed to fetch username", Toast.LENGTH_SHORT).show()
-                }
-        } else {
-            tvGreeting.text = "$greeting, User!" // Fallback if no user is logged in
-        }
-    }
-
-    private fun getCurrentTimeOfDay(): String {
-        return when (Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) {
-            in 0..11 -> "morning"
-            in 12..16 -> "afternoon"
-            in 17..23 -> "evening"
-            else -> "day"
-        }
-    }
 
     private fun navigateToFoodDetails(recipe: Recipe) {
-        val dialogFragment = FoodDialogDetailsFragment.newInstance(recipe)
-        dialogFragment.show(parentFragmentManager, "FoodDetailsDialogFragment")
-    }
-
-    companion object {
-        fun newInstance() = HomeFragment()
+//        val action =
+        val action = HomeFragmentDirections.actionNavigationHomeToFoodDetailsFragment(recipe)
+        findNavController().navigate(action)
     }
 }
+

@@ -1,175 +1,216 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+<!--    tools:context=".RecipeDetailActivity">-->
 
-    android:elevation="4dp">
-
-    <!-- Food Picture -->
-    <ImageView
-        android:id="@+id/foodPicture"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:contentDescription="Food Picture"
-        android:scaleType="centerCrop"
-        android:src="@drawable/baseline_assignment_add_24" />
-
-    <!-- Food Name -->
-    <TextView
-        android:id="@+id/foodName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Food Name"
-        android:textSize="20sp"
-        android:fontFamily="sans-serif-medium"
-        android:paddingTop="8dp" />
-
-    <!-- By User -->
-    <TextView
-        android:id="@+id/author"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="By: User"
-        android:textSize="14sp"
-        android:fontFamily="sans-serif-light"
-        android:paddingBottom="8dp" />
-
-    <!-- Tags -->
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingVertical="4dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Vegan"
-            android:background="@drawable/tag_background"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="4dp"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/cookingTypes"
-            android:text="Cuisine"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/tag_background"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="4dp"
-            android:textSize="12sp"
-            android:layout_marginStart="8dp" />
-    </LinearLayout>
-
-    <!-- Cooking Types -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Type of Cooking: Baking, Frying, etc."
-        android:textSize="14sp"
-        android:paddingVertical="8dp" />
-
-    <!-- Diet -->
-    <TextView
-        android:id="@+id/diet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Diet: 100Cal, Fiber: 10g, Carbs: 10g, Fats: 10g"
-        android:textSize="14sp"
-        android:paddingBottom="8dp" />
-
-    <!-- Total Servings -->
-    <TextView
-        android:id="@+id/totalServings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Total Servings: 1 pax"
-        android:textSize="14sp"
-        android:paddingBottom="16dp" />
-
-    <!-- Ingredients Section -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ingredients:"
-        android:textSize="16sp"
-        android:fontFamily="sans-serif-medium"
-        android:paddingBottom="8dp" />
-
-    <!-- Container for dynamic ingredients -->
-    <LinearLayout
-        android:id="@+id/ingredientsList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="16dp" />
+        android:padding="16dp">
 
-    <!-- Buttons -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        <!-- Food Picture -->
+        <ImageView
+            android:id="@+id/foodPicture"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:contentDescription="Food Picture"
+            android:scaleType="centerCrop"
+            android:src="@drawable/baseline_assignment_add_24" />
 
-        <Button
-            android:id="@+id/prepButton"
-            android:layout_width="wrap_content"
+        <!-- Food Name -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/foodName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Food Name"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-medium"
+                android:paddingTop="8dp" />
+
+            <ImageButton
+                android:id="@+id/btnSaveRecipe"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="end"
+                android:layout_marginTop="1dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Save Recipe"
+                android:src="@drawable/baseline_save_24">
+
+            </ImageButton>
+<!--                app:tint="@color/design_default_color_primary" />-->
+        </LinearLayout>
+
+        <!-- By User -->
+        <TextView
+            android:id="@+id/author"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Prep"
-            android:layout_marginEnd="16dp" />
+            android:text="By: User"
+            android:textSize="14sp"
+            android:paddingBottom="8dp" />
 
-        <Button
-            android:id="@+id/cookButton"
-            android:layout_width="wrap_content"
+        <!-- Tags -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Cook" />
+            android:paddingVertical="8dp"
+            android:scrollbarStyle="outsideInset">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Vegan"
+                    android:background="@drawable/tag_background"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp"
+                    android:textSize="12sp"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/cookingTypes"
+                    android:text="Cuisine"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/tag_background"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp"
+                    android:textSize="12sp"
+                    android:layout_marginEnd="8dp" />
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- Description Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description:"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:id="@+id/etFoodDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lorem Ipsum"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.2"
+            android:paddingBottom="8dp" />
+
+        <!-- Nutrition Info -->
+        <TextView
+            android:id="@+id/diet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Diet: 100Cal, Fiber: 10g, Carbs: 10g, Fats: 10g"
+            android:textSize="14sp"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:id="@+id/totalServings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Total Servings: 1 pax"
+            android:textSize="14sp"
+            android:paddingBottom="16dp" />
+
+        <!-- Ingredients Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ingredients:"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:paddingBottom="8dp" />
+
+        <LinearLayout
+            android:id="@+id/ingredientsList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="16dp" />
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingVertical="8dp">
+
+            <Button
+                android:id="@+id/prepButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Prep"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/cookButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cook" />
+        </LinearLayout>
+
+        <!-- Comment Input Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="16dp">
+
+            <EditText
+                android:id="@+id/commentInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Add a comment"
+                android:padding="8dp"
+                android:background="@drawable/common_google_signin_btn_icon_dark_normal_background"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/addCommentButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Post"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <!-- Comments Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Comments:"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/commentsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp" />
+
     </LinearLayout>
-
-    <!-- Add Comment Section -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:paddingTop="16dp">
-
-        <EditText
-            android:id="@+id/commentInput"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Add a comment"
-            android:padding="8dp"
-            android:background="@drawable/common_google_signin_btn_icon_dark_normal_background"
-            android:textSize="14sp" />
-
-        <Button
-            android:id="@+id/addCommentButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Post"
-            android:padding="8dp"
-            android:layout_marginStart="8dp" />
-    </LinearLayout>
-
-    <!-- Comments Section -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Comments:"
-        android:textSize="16sp"
-        android:fontFamily="sans-serif-medium"
-        android:paddingTop="16dp"
-        android:paddingBottom="8dp" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/commentsRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        android:layout_marginBottom="16dp" />
-
-</LinearLayout>
+</androidx.core.widget.NestedScrollView>

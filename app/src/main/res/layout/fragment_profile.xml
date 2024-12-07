@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    tools:context=".ui.profile.ProfileFragment">
 
     <!-- Profile Section -->
     <LinearLayout
@@ -21,8 +21,7 @@
             android:layout_height="80dp"
             android:src="@drawable/baseline_person_24"
             android:contentDescription="Profile Picture"
-            android:scaleType="centerCrop"/>
-<!--            android:background="@drawable/baselinea" -->
+            android:scaleType="centerCrop" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -62,9 +61,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Logout"
-        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:backgroundTint="@color/design_default_color_primary"
         android:textColor="@android:color/white" />
 
+    <!-- View and Delete Recipes Section -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Manage Recipes"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/btnViewAndDeleteRecipes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View and Delete Recipes"
+        android:backgroundTint="@color/design_default_color_secondary"
+        android:textColor="@android:color/white" />
 
 </LinearLayout>

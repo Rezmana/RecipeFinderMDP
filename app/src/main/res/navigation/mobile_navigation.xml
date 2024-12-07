@@ -10,23 +10,28 @@
         android:name="com.example.recipefinder.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home">
-    <action
-        android:id="@+id/action_navigation_home_to_foodDialogDetailsFragment"
-        app:destination="@id/foodDialogDetailsFragment" />
         <action
             android:id="@+id/action_navigation_home_to_browseFragment"
             app:destination="@id/navigation_browse" />
+        <action
+            android:id="@+id/action_navigation_home_to_foodDetailsFragment"
+            app:destination="@id/foodDetailsFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_browse"
-        android:name="com.example.recipefinder.BrowseFragment"
+        android:name="com.example.recipefinder.ui.Browse.BrowseFragment"
         android:label="@string/title_browse"
-        tools:layout="@layout/fragment_browse" />
+        tools:layout="@layout/fragment_browse">
+        <action
+            android:id="@+id/action_navigation_browse_to_foodDetailsFragment"
+            app:destination="@id/foodDetailsFragment" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_saved_recipe"
-        android:name="com.example.recipefinder.SavedRecipes"
+        android:name="com.example.recipefinder.ui.savedrecipes.SavedRecipes"
         android:label="@string/title_saved_recipe"
         tools:layout="@layout/fragment_saved_recipe" />
     <fragment
@@ -34,32 +39,57 @@
         android:name="com.example.recipefinder.ui.createrecipe.CreateRecipeFragment"
         android:label="fragment_create_recipe"
         tools:layout="@layout/fragment_create_recipe" />
+
     <fragment
         android:id="@+id/foodDetailsFragment"
         android:name="com.example.recipefinder.FoodDetailsFragment"
         android:label="Food Details"
         tools:layout="@layout/fragment_view_food">
+
         <argument
             android:name="recipe"
             app:argType="com.example.recipefinder.entities.Recipe" />
     </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/foodDialogDetailsFragment"-->
+<!--        android:name="com.example.recipefinder.FoodDialogDetailsFragment"-->
+<!--        android:label="Food Dialog Details"-->
+<!--        android:layout="@layout/fragment_dialog_food_details">-->
+<!--        <argument-->
+<!--            android:name="recipe"-->
+<!--            app:argType="com.example.recipefinder.entities.Recipe" />-->
+<!--        <action-->
+<!--            android:id="@+id/action_foodDialogDetailsFragment_to_foodDetailsFragment"-->
+<!--            app:destination="@id/foodDetailsFragment" />-->
+<!--    </fragment>-->
+
     <fragment
-        android:id="@+id/foodDialogDetailsFragment"
-        android:name="com.example.recipefinder.FoodDialogDetailsFragment"
-        android:label="Food Dialog Details"
-        android:layout="@layout/fragment_dialog_food_details">
-        <argument
-            android:name="recipe"
-            app:argType="com.example.recipefinder.entities.Recipe" />
+        android:id="@+id/profileFragment"
+        android:name="com.example.recipefinder.ui.profile.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_manageRecipesFragment"
+            app:destination="@id/manageRecipesFragment" />
     </fragment>
+
+
+    <fragment
+        android:id="@+id/manageRecipesFragment"
+        android:name="com.example.recipefinder.ui.managerecipes.ManageRecipesFragment"
+        android:label="Manage Recipes"
+        tools:layout="@layout/fragment_manage_recipes" />
+
     <fragment
         android:id="@+id/nav_profile"
         android:name="com.example.recipefinder.ui.profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
+
+
     <fragment
         android:id="@+id/fragment_browse"
-        android:name="com.example.recipefinder.BrowseFragment"
+        android:name="com.example.recipefinder.ui.Browse.BrowseFragment"
         android:label="fragment_browse"
         tools:layout="@layout/fragment_browse" />
 

@@ -134,7 +134,7 @@
 
     <!-- Button at the bottom -->
     <Button
-        android:id="@+id/seeMore"
+        android:id="@+id/seeMoreButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="See more"

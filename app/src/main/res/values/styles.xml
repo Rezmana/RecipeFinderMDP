@@ -4,4 +4,10 @@
         <item name="android:background">@color/black_overlay</item>
         <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
     </style>
+    <style name="CustomDialogStyle" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowMinWidthMajor">75%</item> <!-- 75% of screen width -->
+        <item name="android:windowMinWidthMinor">75%</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:padding">16dp</item>
+    </style>
 </resources>

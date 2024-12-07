@@ -1,16 +1,22 @@
-package com.example.recipefinder
+package com.example.recipefinder.ui.savedrecipes
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.recipefinder.R
+import com.example.recipefinder.RecipeAdapter
+import com.example.recipefinder.database.RoomDB
 import com.example.recipefinder.entities.Recipe
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
 
 class SavedRecipes : Fragment() {
 
@@ -37,7 +43,8 @@ class SavedRecipes : Fragment() {
         recyclerView.adapter = recipeAdapter
 
         // Fetch saved recipes and update RecyclerView
-        fetchSavedRecipes()
+//        fetchSavedRecipes()
+        testGetSavedRecipesFromLocalDB()
     }
 
     private fun fetchSavedRecipes() {
@@ -58,6 +65,24 @@ class SavedRecipes : Fragment() {
             .addOnFailureListener { exception ->
                 Toast.makeText(context, "Failed to load recipes: ${exception.message}", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun testGetSavedRecipesFromLocalDB() {
+        val database = RoomDB.getDatabase(requireContext())
+        val recipeDao = database.recipeDao()
+
+        lifecycleScope.launch {
+            val savedRecipes = recipeDao.getAllRecipes() // Replace with your DAO method
+            if (savedRecipes.isEmpty()) {
+                Toast.makeText(requireContext(), "No recipes found in local DB", Toast.LENGTH_SHORT).show()
+            } else {
+                savedRecipes.forEach { recipe ->
+                    Log.d("LocalDBTest", "Retrieved Recipe: ${recipe.recipeName}")
+                    updateRecyclerView(savedRecipes)
+                }
+                Toast.makeText(requireContext(), "Recipes retrieved from local DB", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun updateRecyclerView(savedRecipes: List<Recipe>) {

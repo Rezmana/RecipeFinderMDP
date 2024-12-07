@@ -1,4 +1,4 @@
-package com.example.recipefinder
+package com.example.recipefinder.ui.Browse
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,9 +12,10 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.recipefinder.R
+import com.example.recipefinder.RecipeAdapter
 import com.example.recipefinder.entities.Recipe
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -47,20 +48,22 @@ class BrowseFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Initialize views
-        backIcon = view.findViewById(R.id.backIcon)
+//        backIcon = view.findViewById(R.id.backIcon)
         searchBar = view.findViewById(R.id.searchBar)
         searchIcon = view.findViewById(R.id.searchIcon)
         cuisineTagsContainer = view.findViewById(R.id.cuisineTypeTags)
         browseDisplayRecipes = view.findViewById(R.id.browse_display_recipes)
-
         ingredientGrid = view.findViewById(R.id.ingredientGrid)
 
 //        val recyclerView = view.findViewById<RecyclerView>(R.id.browse_display_recipes)
         recipeAdapter = RecipeAdapter { recipe ->
             Toast.makeText(context, "Clicked: ${recipe.recipeName}", Toast.LENGTH_SHORT).show()
+
         }
         browseDisplayRecipes.layoutManager = LinearLayoutManager(context)
         browseDisplayRecipes.adapter = recipeAdapter
+
+
 
         // Set up listeners and RecyclerView
         setupIngredientGrid()
@@ -70,18 +73,47 @@ class BrowseFragment : Fragment() {
     }
 
     private fun setupListeners() {
-        backIcon.setOnClickListener {
-            Toast.makeText(requireContext(), "Back clicked!", Toast.LENGTH_SHORT).show()
-            // Navigate back or handle the back action
-            findNavController().popBackStack() // Navigate back in the NavController stack
-        }
+//        backIcon.setOnClickListener {
+//            Toast.makeText(requireContext(), "Back clicked!", Toast.LENGTH_SHORT).show()
+//            // Navigate back or handle the back action
+//            findNavController().popBackStack() // Navigate back in the NavController stack
+//        }
 
         searchIcon.setOnClickListener {
             val query = searchBar.text.toString().trim()
-            Toast.makeText(requireContext(), "Searching for: $query", Toast.LENGTH_SHORT).show()
-            // Implement search functionality if needed
+            if (query.isNotEmpty()) {
+                searchRecipes(query)
+            } else {
+                Toast.makeText(requireContext(), "Please enter a search query", Toast.LENGTH_SHORT).show()
+            }
 
         }
+    }
+
+    private fun searchRecipes(query: String) {
+        val firestore = FirebaseFirestore.getInstance()
+        val recipesRef = firestore.collection("recipes") // Replace with your collection name
+
+        // Perform the query
+        recipesRef
+            .whereGreaterThanOrEqualTo("recipeName", query)
+            .whereLessThanOrEqualTo("recipeName", query + "\uf8ff") // Ensures search is case-insensitive
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (querySnapshot.isEmpty) {
+                    Toast.makeText(requireContext(), "No recipes found for \"$query\"", Toast.LENGTH_SHORT).show()
+                } else {
+                    val recipes = querySnapshot.toObjects(Recipe::class.java)
+                    updateRecyclerView(recipes)
+                }
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(requireContext(), "Search failed: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun updateRecyclerView(recipes: List<Recipe>) {
+        recipeAdapter.updateRecipes(recipes) // Ensure your adapter has the `updateRecipes` method
     }
 
     private fun fetchAllRecipes() {
@@ -125,7 +157,7 @@ class BrowseFragment : Fragment() {
             onRecipeClicked(recipe) // Handle clicks if needed
         }
 
-        browseDisplayRecipes.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+//        browseDisplayRecipes.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         browseDisplayRecipes.adapter = recipeAdapter
 
         // Fetch all recipes and populate the adapter
@@ -158,6 +190,10 @@ class BrowseFragment : Fragment() {
             ingredientGrid.addView(button)
         }
     }
+
+//    private fun navigateToFoodDetails(recipe: Recipe) {
+//
+//    }
 
     private fun populateIngredientGrid() {
         // Loop through the ingredient list and create buttons dynamically
@@ -204,5 +240,7 @@ class BrowseFragment : Fragment() {
     private fun onRecipeClicked(recipe: Recipe) {
         Toast.makeText(requireContext(), "Recipe clicked: ${recipe.recipeName}", Toast.LENGTH_SHORT).show()
         // Navigate to recipe details or handle the click action
+//        val dialogFragment = Food.newInstance(recipe)
+//        dialogFragment.show(parentFragmentManager, "FoodDetailsDialogFragment")
     }
 }

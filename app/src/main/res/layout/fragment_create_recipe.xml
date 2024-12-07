@@ -4,11 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="?actionBarSize">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-
         android:padding="16dp">
 
         <!-- Recipe Image Upload -->
@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Recipe Image"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/ivRecipeImage"
@@ -24,13 +24,13 @@
             android:layout_height="200dp"
             android:scaleType="centerCrop"
             android:background="@drawable/baseline_assignment_add_24"
-            android:layout_marginTop="8dp"/>
+            android:layout_marginTop="8dp" />
 
         <Button
             android:id="@+id/btnUploadImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Upload Image"/>
+            android:text="Upload Image" />
 
         <!-- Recipe Name -->
         <EditText
@@ -41,6 +41,8 @@
             android:inputType="text"
             android:layout_marginTop="16dp"
             android:maxLines="1" />
+
+        <!-- Recipe Description -->
         <EditText
             android:id="@+id/etRecipeDescription"
             android:layout_width="match_parent"
@@ -50,57 +52,31 @@
             android:layout_marginTop="16dp"
             android:maxLines="1" />
 
-        <!-- Cuisine Spinner -->
+        <!-- Cuisine Type -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Cuisine Type"
             android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp" />
 
         <Spinner
             android:id="@+id/spinnerCuisine"
             android:layout_width="match_parent"
-            android:layout_height="48dp"/>
+            android:layout_height="48dp" />
 
-        <!-- Difficulty Level Spinner -->
+        <!-- Difficulty Level -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Difficulty Level"
             android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp" />
 
         <Spinner
             android:id="@+id/spinnerDifficulty"
             android:layout_width="match_parent"
-            android:layout_height="48dp"/>
-
-        <!-- Dietary Options -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Dietary Options"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <CheckBox
-                android:id="@+id/cbVegetarian"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Vegetarian"/>
-
-            <CheckBox
-                android:id="@+id/cbVegan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Vegan"/>
-        </LinearLayout>
+            android:layout_height="48dp" />
 
         <!-- Ingredients Section -->
         <TextView
@@ -108,7 +84,7 @@
             android:layout_height="wrap_content"
             android:text="Ingredients"
             android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -131,35 +107,35 @@
                 android:layout_height="48dp"
                 android:layout_weight="0.2"
                 android:hint="Qty"
-                android:inputType="number|numberDecimal"/>
+                android:inputType="number|numberDecimal" />
 
             <Spinner
                 android:id="@+id/spinnerUnit"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
-                android:layout_weight="0.2"/>
+                android:layout_weight="0.2" />
         </LinearLayout>
 
         <Button
             android:id="@+id/btnAddIngredient"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add Ingredient"/>
+            android:text="Add Ingredient" />
 
         <TextView
             android:id="@+id/tvIngredientsPreview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"/>
+            android:layout_marginTop="4dp" />
 
-        <!-- Steps Section -->
+        <!-- Preparation Steps Section -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Recipe Steps"
+            android:text="Steps to Prep for Cooking"
             android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -168,27 +144,64 @@
             android:layout_marginTop="8dp">
 
             <EditText
-                android:id="@+id/etStep"
+                android:id="@+id/etPrepStep"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
-                android:hint="Add Recipe Step"
+                android:hint="Add Preparation Step"
                 android:inputType="text"
                 android:maxLines="1" />
 
             <Button
-                android:id="@+id/btnAddStep"
+                android:id="@+id/btnAddPrepStep"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add"/>
+                android:text="Add" />
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tvStepsPreview"
+            android:id="@+id/tvPrepStepsPreview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"/>
+            android:layout_marginTop="4dp" />
+
+        <!-- Cooking Steps Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cooking Steps"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <EditText
+                android:id="@+id/etCookingStep"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:hint="Add Cooking Step"
+                android:inputType="text"
+                android:maxLines="1" />
+
+            <Button
+                android:id="@+id/btnAddCookingStep"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvCookingStepsPreview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp" />
 
         <!-- Save Recipe Button -->
         <Button
@@ -196,7 +209,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Save Recipe"/>
+            android:text="Save Recipe" />
+
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/loadingSpinner"
             android:layout_width="200dp"

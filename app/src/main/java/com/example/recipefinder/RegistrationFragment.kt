@@ -2,6 +2,7 @@ package com.example.recipefinder
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 
 
@@ -133,10 +135,15 @@ class RegistrationFragment : Fragment() {
                 if (task.isSuccessful) {
                     val user = auth.currentUser
                     if (user != null) {
-                        saveUsernameToFirestore(user.uid, username)
-//                        Toast.makeText(context,"Registration Successful", Toast.LENGTH_SHORT).show();
+                        updateDisplayName(user, username) // Add display name
+                        saveUserToFireStore(user.uid, username)
                         saveUserToSharedPreferences(user.uid, username, email)
+                        Toast.makeText(context, "Registration Successful", Toast.LENGTH_SHORT).show()
                         updateUI(user)
+//                        saveUserToFireStore(user.uid, username)
+////                        Toast.makeText(context,"Registration Successful", Toast.LENGTH_SHORT).show();
+//                        saveUserToSharedPreferences(user.uid, username, email)
+//                        updateUI(user)
                     } else {
                         Toast.makeText(context, "User is null", Toast.LENGTH_SHORT).show()
 
@@ -150,7 +157,22 @@ class RegistrationFragment : Fragment() {
             }
     }
 
-    private fun saveUsernameToFirestore(userId: String, username: String) {
+    private fun updateDisplayName(user: FirebaseUser, displayName: String) {
+        val profileUpdates = UserProfileChangeRequest.Builder()
+            .setDisplayName(displayName)
+            .build()
+
+        user.updateProfile(profileUpdates)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d("FirebaseAuth", "User display name updated to: $displayName")
+                } else {
+                    Log.e("FirebaseAuth", "Failed to update display name: ${task.exception?.message}")
+                }
+            }
+    }
+
+    private fun saveUserToFireStore(userId: String, username: String) {
         val userData = mapOf(
             "username" to username,
             "email" to emailInput.text.toString().trim()

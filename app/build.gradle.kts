@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
     id ("androidx.navigation.safeargs.kotlin")
+    id ("com.google.devtools.ksp")
+    id ("kotlin-parcelize")
 }
 
 android {
@@ -67,7 +69,11 @@ dependencies {
     implementation (libs.androidx.navigation.ui.ktx.v270)
     implementation (libs.kotlinx.coroutines.android)
     implementation (libs.android.lottie)
+    implementation (libs.androidx.room.runtime)
+    implementation(libs.gson)
+    ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
 }

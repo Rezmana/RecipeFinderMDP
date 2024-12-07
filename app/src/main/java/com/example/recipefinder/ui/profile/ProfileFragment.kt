@@ -1,65 +1,95 @@
 package com.example.recipefinder.ui.profile
 
-import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-//import com.example.recipefinder.LandingActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.recipefinder.LandingActivity
 import com.example.recipefinder.R
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.example.recipefinder.databinding.FragmentProfileBinding
 
 class ProfileFragment : Fragment() {
 
-    private lateinit var profilePicture: ImageView
-    private lateinit var profileName: TextView
-    private lateinit var profileEmail: TextView
-    private lateinit var btnLogout: Button
-    private val firestore = FirebaseFirestore.getInstance()
-    private val auth = FirebaseAuth.getInstance()
+    private var _binding: FragmentProfileBinding? = null
+    private val binding get() = _binding!!
+
+    private lateinit var viewModel: ProfileViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+    ): View {
+        _binding = FragmentProfileBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize views
-        profilePicture = view.findViewById(R.id.profilePicture)
-        profileName = view.findViewById(R.id.profileName)
-        profileEmail = view.findViewById(R.id.profileEmail)
-        btnLogout = view.findViewById(R.id.btnLogout)
 
-        btnLogout.setOnClickListener {
-            logout()
+
+        // Initialize ViewModel
+        viewModel = ViewModelProvider(
+            this,
+            ProfileViewModelFactory(requireContext())
+        )[ProfileViewModel::class.java]
+
+        // Observe ViewModel
+        observeViewModel()
+
+        // Set logout button click listener
+        binding.btnLogout.setOnClickListener {
+            viewModel.logout()
+        }
+
+        binding.btnViewAndDeleteRecipes.setOnClickListener {
+            findNavController().navigate(R.id.action_profileFragment_to_manageRecipesFragment)
+        }
+    }
+
+    private fun observeViewModel() {
+        viewModel.profileName.observe(viewLifecycleOwner) { name ->
+            binding.profileName.text = name
+        }
+
+        viewModel.profileEmail.observe(viewLifecycleOwner) { email ->
+            binding.profileEmail.text = email
+        }
+
+        viewModel.profilePictureUrl.observe(viewLifecycleOwner) { url ->
+            if (!url.isNullOrEmpty()) {
+                // Use URL to fetch the image and set it directly to the ImageView
+                val uri = Uri.parse(url)
+                binding.profilePicture.setImageURI(uri)
+            } else {
+                // Set default profile picture if URL is empty or null
+                binding.profilePicture.setImageResource(R.drawable.baseline_person_24)
+            }
+        }
+
+
+        viewModel.logoutEvent.observe(viewLifecycleOwner) { shouldLogout ->
+            if (shouldLogout) {
+                redirectToLogin()
+                viewModel.clearLogoutEvent()
+            }
         }
     }
 
 
-        //TODO:: Don't forget to comment this out and add features to the profile fragment
-     private fun logout() {
-            // Sign out from Firebase
-            FirebaseAuth.getInstance().signOut()
-
-            // Clear login state in SharedPreferences
-            val sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-            sharedPreferences.edit().putBoolean("isLoggedIn", false).apply()
-
-            // Redirect to Login screen
-            val intent = Intent(requireContext(), LandingActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-        }
+    private fun redirectToLogin() {
+        val intent = Intent(requireContext(), LandingActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+}

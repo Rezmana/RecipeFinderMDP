@@ -27,6 +27,12 @@ class CommentsAdapter(private val comments: MutableList<Comments>) :
         notifyItemInserted(comments.size - 1)
     }
 
+    fun updateComments(newComments: List<Comments>) {
+        comments.clear()
+        comments.addAll(newComments)
+        notifyDataSetChanged() // Notify RecyclerView that the data has changed
+    }
+
     class CommentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val userName: TextView = itemView.findViewById(R.id.userName)
         val commentText: TextView = itemView.findViewById(R.id.commentText)

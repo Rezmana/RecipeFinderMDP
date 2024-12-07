@@ -7,8 +7,16 @@
     android:padding="16dp"
     android:id="@+id/HomePage"
     android:background="#FFFFFF"
-
     tools:context=".LandingActivity">
+
+    <LinearLayout
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp">
+
+    </LinearLayout>
+
 
 
     <!-- User Greeting -->
