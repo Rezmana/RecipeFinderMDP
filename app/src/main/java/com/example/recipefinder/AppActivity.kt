@@ -37,7 +37,7 @@ class AppActivity : AppCompatActivity() {
                 R.id.navigation_create_recipe,
                 R.id.navigation_browse,
                 R.id.navigation_saved_recipe,
-                R.id.nav_profile
+                R.id.profileFragment
             )
         )
 

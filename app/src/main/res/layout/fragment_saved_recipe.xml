@@ -5,6 +5,8 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
+    android:background="@android:color/white"
+    android:layout_marginBottom="?actionBarSize"
     android:padding="16dp">
 
     <LinearLayout

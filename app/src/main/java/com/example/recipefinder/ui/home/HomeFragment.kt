@@ -38,8 +38,6 @@ class HomeFragment : Fragment() {
         val tvGreeting = view.findViewById<TextView>(R.id.tv_greeting)
         val tvCommunity = view.findViewById<TextView>(R.id.tv_community)
         val tvBrowse = view.findViewById<TextView>(R.id.tv_browse)
-        val tvSeeMoreFeatured = view.findViewById<TextView>(R.id.tv_see_more_featured)
-        val tvSeeMoreRecommendation = view.findViewById<TextView>(R.id.tv_see_more_recommendation)
         val featuredRecyclerView = view.findViewById<RecyclerView>(R.id.rv_featured_recipes)
 
         // Initialize RecyclerView Adapter
@@ -58,7 +56,7 @@ class HomeFragment : Fragment() {
         ObserveViewModel()
 
         // Set up UI interactions
-        setupClickListeners(tvCommunity, tvBrowse, tvSeeMoreFeatured, tvSeeMoreRecommendation)
+        setupClickListeners(tvCommunity, tvBrowse,)
 
         // Observe ViewModel
 //        viewModel.greeting.observe(viewLifecycleOwner) { greeting ->
@@ -107,8 +105,6 @@ class HomeFragment : Fragment() {
     private fun setupClickListeners(
         tvCommunity: TextView,
         tvBrowse: TextView,
-        tvSeeMoreFeatured: TextView,
-        tvSeeMoreRecommendation: TextView
     ) {
         tvCommunity.setOnClickListener {
             Toast.makeText(requireContext(), "Community clicked", Toast.LENGTH_SHORT).show()
@@ -118,15 +114,6 @@ class HomeFragment : Fragment() {
             findNavController().navigate(R.id.action_navigation_home_to_browseFragment)
         }
 
-        tvSeeMoreFeatured.setOnClickListener {
-            // Navigate to a FeaturedRecipesFragment (if implemented)
-            Toast.makeText(requireContext(), "See More Featured clicked", Toast.LENGTH_SHORT).show()
-        }
-
-        tvSeeMoreRecommendation.setOnClickListener {
-            // Navigate to a RecommendationsFragment (if implemented)
-            Toast.makeText(requireContext(), "See More Recommendations clicked", Toast.LENGTH_SHORT).show()
-        }
     }
 
 

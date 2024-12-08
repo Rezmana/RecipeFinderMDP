@@ -1,8 +1,6 @@
 package com.example.recipefinder
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,45 +8,41 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
-import com.google.firebase.appcheck.FirebaseAppCheck
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.UserProfileChangeRequest
-import com.google.firebase.firestore.FirebaseFirestore
-
+import com.example.recipefinder.RegistrationViewModel
+import javax.xml.validation.Validator
 
 class RegistrationFragment : Fragment() {
-    private lateinit var emailInput: EditText
-    private lateinit var passwordInput: EditText
-    private lateinit var confirmPasswordInput: EditText
-    private lateinit var usernameInput: EditText
-    private lateinit var continueButton: Button
-    private lateinit var emailLayout: TextInputLayout
-    private lateinit var passwordLayout: TextInputLayout
-    private lateinit var confirmPasswordLayout: TextInputLayout
-    private lateinit var usernameLayout: TextInputLayout
-    // Firebase Auth instance
-    private lateinit var auth: FirebaseAuth
+//    private val validator = Validator()
+    private val viewModel: RegistrationViewModel by viewModels()
 
-    private val firestore = FirebaseFirestore.getInstance()
+    lateinit var emailInput: EditText
+    lateinit var passwordInput: EditText
+    lateinit var confirmPasswordInput: EditText
+    lateinit var usernameInput: EditText
+    private lateinit var continueButton: Button
+
+    lateinit var emailLayout: TextInputLayout
+    lateinit var passwordLayout: TextInputLayout
+    lateinit var confirmPasswordLayout: TextInputLayout
+    lateinit var usernameLayout: TextInputLayout
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
-
+        savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_registration, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // Initialize Firebase Auth
-        auth = FirebaseAuth.getInstance()
-        // Initialize views
+
         initializeViews(view)
+        setupObservers()
         setupListeners()
     }
 
@@ -57,7 +51,6 @@ class RegistrationFragment : Fragment() {
         emailInput = view.findViewById(R.id.emailRegistrationInput)
         passwordInput = view.findViewById(R.id.passwordTextInputRegistration)
         confirmPasswordInput = view.findViewById(R.id.confirmPasswordInput)
-
 
         usernameLayout = view.findViewById(R.id.usernameInputLayout)
         emailLayout = view.findViewById(R.id.emailInputLayout)
@@ -68,19 +61,57 @@ class RegistrationFragment : Fragment() {
 
     private fun setupListeners() {
         continueButton.setOnClickListener {
-            performRegistration()
-            // TODO: DONT FORGET TO UNCOMMENT THE VALIDATION INPUT
-//            if (validateInputs()) {
-//                performRegistration()
-//            }
+            if (validateInputs()) {
+                val email = emailInput.text.toString().trim()
+                val password = passwordInput.text.toString().trim()
+                val username = usernameInput.text.toString().trim()
+
+                viewModel.performRegistration(email, password, username, requireContext())
+            }
         }
     }
 
-    private fun validateInputs(): Boolean {
+    private fun setupObservers() {
+        viewModel.registrationStatus.observe(viewLifecycleOwner, Observer { isSuccess ->
+            if (isSuccess) {
+                findNavController().navigate(R.id.fragmentAllergies)
+            }
+        })
 
+        viewModel.toastMessage.observe(viewLifecycleOwner, Observer { message ->
+            message?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                viewModel.clearToastMessage()
+            }
+        })
+    }
+
+//    fun validateInputs(): Boolean {
+//        val email = emailInput.text.toString().trim()
+//        val username = usernameInput.text.toString().trim()
+//        val password = passwordInput.text.toString()
+//        val confirmPassword = confirmPasswordInput.text.toString()
+//
+//        val errors = validator.validateInputs(email, username, password, confirmPassword)
+//
+//        // Reset errors
+//        emailLayout.error = null
+//        usernameLayout.error = null
+//        passwordLayout.error = null
+//        confirmPasswordLayout.error = null
+//
+//        // Apply errors to TextInputLayouts
+//        emailLayout.error = errors["email"]
+//        usernameLayout.error = errors["username"]
+//        passwordLayout.error = errors["password"]
+//        confirmPasswordLayout.error = errors["confirmPassword"]
+//
+//        return errors.isEmpty()
+//    }
+
+    fun validateInputs(): Boolean {
         var isValid = true
 
-        // Reset all errors
         emailLayout.error = null
         passwordLayout.error = null
         confirmPasswordLayout.error = null
@@ -125,90 +156,4 @@ class RegistrationFragment : Fragment() {
         return isValid
     }
 
-    private fun performRegistration() {
-        val email = emailInput.text.toString().trim()
-        val password = passwordInput.text.toString().trim()
-        val username = usernameInput.text.toString().trim()
-
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(requireActivity()) { task ->
-                if (task.isSuccessful) {
-                    val user = auth.currentUser
-                    if (user != null) {
-                        updateDisplayName(user, username) // Add display name
-                        saveUserToFireStore(user.uid, username)
-                        saveUserToSharedPreferences(user.uid, username, email)
-                        Toast.makeText(context, "Registration Successful", Toast.LENGTH_SHORT).show()
-                        updateUI(user)
-//                        saveUserToFireStore(user.uid, username)
-////                        Toast.makeText(context,"Registration Successful", Toast.LENGTH_SHORT).show();
-//                        saveUserToSharedPreferences(user.uid, username, email)
-//                        updateUI(user)
-                    } else {
-                        Toast.makeText(context, "User is null", Toast.LENGTH_SHORT).show()
-
-                    }
-                } else {
-                    Toast.makeText(
-                        context, "Registration failed: ${task.exception?.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-    }
-
-    private fun updateDisplayName(user: FirebaseUser, displayName: String) {
-        val profileUpdates = UserProfileChangeRequest.Builder()
-            .setDisplayName(displayName)
-            .build()
-
-        user.updateProfile(profileUpdates)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d("FirebaseAuth", "User display name updated to: $displayName")
-                } else {
-                    Log.e("FirebaseAuth", "Failed to update display name: ${task.exception?.message}")
-                }
-            }
-    }
-
-    private fun saveUserToFireStore(userId: String, username: String) {
-        val userData = mapOf(
-            "username" to username,
-            "email" to emailInput.text.toString().trim()
-        )
-
-        firestore.collection("users").document(userId)
-            .set(userData)
-            .addOnSuccessListener {
-                Toast.makeText(context, "User profile created!", Toast.LENGTH_SHORT).show()
-                updateUI(auth.currentUser)
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(context, "Failed to save user data: ${e.message}", Toast.LENGTH_LONG).show()
-            }
-    }
-
-    private fun saveUserToSharedPreferences(userId: String, username: String, email: String) {
-        val sharedPreferences = requireContext().getSharedPreferences("userPrefs", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-
-        // Save data to SharedPreferences
-        editor.putString("userId", userId)
-        editor.putString("username", username)
-        editor.putString("email", email)
-        editor.putBoolean("isLoggedIn", true)
-
-        // Apply changes
-        editor.clear()
-        editor.apply()
-    }
-
-    private fun updateUI(user: FirebaseUser?) {
-        if (user != null) {
-            Toast.makeText(context, "Registration successful!", Toast.LENGTH_LONG).show()
-            // Navigate to the next screen, e.g.:
-             findNavController().navigate(R.id.fragmentAllergies)
-        }
-    }
 }

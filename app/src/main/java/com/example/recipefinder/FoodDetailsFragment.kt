@@ -32,10 +32,13 @@ class FoodDetailsFragment : Fragment() {
     private lateinit var cookingTime: TextView
     private lateinit var veganTag: TextView
     private lateinit var vegetarianTag: TextView
+    private lateinit var foodDescription: TextView
     private lateinit var ingredientsList: LinearLayout
     private lateinit var stepsList: TextView
     private lateinit var commentInput: EditText
     private lateinit var addCommentButton: Button
+    private lateinit var prepStepButton: Button
+    private lateinit var cookStepButton: Button
     private lateinit var commentsRecyclerView: RecyclerView
     private lateinit var commentsAdapter: CommentsAdapter
     private lateinit var btnSaveRecipe : AppCompatImageButton
@@ -62,15 +65,19 @@ class FoodDetailsFragment : Fragment() {
         prepTime = view.findViewById(R.id.totalServings) // Reusing the view ID for simplicity
         cookingTime = view.findViewById(R.id.totalServings)
         commentsRecyclerView = view.findViewById(R.id.commentsRecyclerView)
+        foodDescription = view.findViewById(R.id.etFoodDescription)
+
 
 
 
 //        veganTag = view.findViewById(R.id.vegan)
 //        vegetarianTag = view.findViewById(R.id.vegetarianTag)
         ingredientsList = view.findViewById(R.id.ingredientsList)
-//        stepsList = view.findViewById(R.id.stepsList)
+        stepsList = view.findViewById(R.id.stepsList)
         commentInput = view.findViewById(R.id.commentInput)
         addCommentButton = view.findViewById(R.id.addCommentButton)
+        prepStepButton = view.findViewById(R.id.prepButton)
+        cookStepButton = view.findViewById(R.id.cookButton)
 
 
 
@@ -88,7 +95,7 @@ class FoodDetailsFragment : Fragment() {
         fetchAndDisplayComments(recipeId) // Load existing comments
 
         btnSaveRecipe.setOnClickListener {
-//            saveRecipeForUser(recipe)
+            saveRecipeForUser(recipe)
             saveRecipeLocally(recipe)
         }
 
@@ -143,7 +150,17 @@ class FoodDetailsFragment : Fragment() {
                 Toast.makeText(requireContext(), "Comment cannot be empty", Toast.LENGTH_SHORT).show()
             }
         }
+
+        prepStepButton.setOnClickListener{
+            displaySteps(recipe.prepSteps)
+        }
+
+        cookStepButton.setOnClickListener{
+            displaySteps(recipe.cookSteps)
+        }
     }
+
+
 
     companion object {
         fun newInstance(recipe: Recipe): FoodDetailsFragment {
@@ -153,6 +170,14 @@ class FoodDetailsFragment : Fragment() {
             }
             fragment.arguments = args
             return fragment
+        }
+    }
+
+    private fun displaySteps(steps: List<String>) {
+        if (steps.isNotEmpty()) {
+            stepsList.text = steps.mapIndexed { index, step -> "${index + 1}. $step" }.joinToString("\n")
+        } else {
+            stepsList.text = "No steps available."
         }
     }
 
@@ -181,7 +206,6 @@ class FoodDetailsFragment : Fragment() {
 
         savedRecipeRef.set(recipe)
             .addOnSuccessListener {
-                saveRecipeLocally(recipe)
                 Toast.makeText(context, "Recipe saved successfully!", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener { e ->
@@ -207,6 +231,7 @@ class FoodDetailsFragment : Fragment() {
         difficulty.text = "Difficulty: ${recipe.difficulty ?: "N/A"}"
         prepTime.text = "Prep Time: ${recipe.prepTime ?: "N/A"}"
         cookingTime.text = "Cooking Time: ${recipe.cookingTime ?: "N/A"}"
+        foodDescription.text = recipe.recipeDescription
 
 //        veganTag.visibility = if (recipe.vegan) View.VISIBLE else View.GONE
 //        vegetarianTag.visibility = if (recipe.vegetarian) View.VISIBLE else View.GONE

@@ -13,14 +13,18 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.Calendar
 
-class HomeViewModel : ViewModel() {
-    private val firestore = FirebaseFirestore.getInstance()
-    private val auth = FirebaseAuth.getInstance()
+open class HomeViewModel(
+    private val auth: FirebaseAuth? = FirebaseAuth.getInstance(),
+    private val firestore: FirebaseFirestore? = FirebaseFirestore.getInstance()
 
-    private val _greeting = MutableLiveData<String>()
+) : ViewModel() {
+//    var firestore = FirebaseFirestore.getInstance()
+//    var auth = FirebaseAuth.getInstance()
+
+    val _greeting = MutableLiveData<String>()
     val greeting: LiveData<String> get() = _greeting
 
-    private val _featuredRecipes = MutableLiveData<List<Recipe>>()
+    val _featuredRecipes = MutableLiveData<List<Recipe>>()
     val featuredRecipes: LiveData<List<Recipe>> get() = _featuredRecipes
 
     private val _toastMessage = MutableLiveData<String?>()
@@ -31,21 +35,21 @@ class HomeViewModel : ViewModel() {
         updateGreeting()
     }
 
-    private fun fetchFeaturedRecipes() {
-        firestore.collection("recipes")
-            .get()
-            .addOnSuccessListener { querySnapshot ->
+    fun fetchFeaturedRecipes() {
+        firestore?.collection("recipes")
+            ?.get()
+            ?.addOnSuccessListener { querySnapshot ->
                 val recipes = querySnapshot.toObjects(Recipe::class.java)
                 _featuredRecipes.value = recipes
                 Log.d("HomeViewModel", "Fetched recipes: ${recipes.size}")
             }
-            .addOnFailureListener { exception ->
+            ?.addOnFailureListener { exception ->
                 Log.e("HomeViewModel", "Error fetching recipes: ${exception.message}")
             }
     }
 
-    private fun updateGreeting() {
-        val user = auth.currentUser
+    open fun updateGreeting() {
+        val user = auth?.currentUser
         val greetingText = when (getCurrentTimeOfDay()) {
             "morning" -> "Good Morning"
             "afternoon" -> "Good Afternoon"
@@ -55,12 +59,12 @@ class HomeViewModel : ViewModel() {
 
         if (user != null) {
             val userId = user.uid
-            firestore.collection("users").document(userId).get()
-                .addOnSuccessListener { document ->
+            firestore?.collection("users")?.document(userId)?.get()
+                ?.addOnSuccessListener { document ->
                     val username = document.getString("username") ?: "User"
                     _greeting.postValue("$greetingText, $username!")
                 }
-                .addOnFailureListener {
+                ?.addOnFailureListener {
                     _greeting.postValue("$greetingText, User!") // Fallback
                 }
         } else {

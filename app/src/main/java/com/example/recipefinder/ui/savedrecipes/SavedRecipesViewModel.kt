@@ -19,6 +19,7 @@ class SavedRecipesViewModel(context: Context) : ViewModel() {
     private val firestore = FirebaseFirestore.getInstance()
     private val userId = FirebaseAuth.getInstance().currentUser?.uid
     private val recipeDao = RoomDB.getDatabase(context).recipeDao()
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     private val _savedRecipes = MutableLiveData<List<Recipe>>()
     val savedRecipes: LiveData<List<Recipe>> get() = _savedRecipes
@@ -27,6 +28,7 @@ class SavedRecipesViewModel(context: Context) : ViewModel() {
     val toastMessage: LiveData<String?> get() = _toastMessage
 
     init {
+        fetchSavedRecipesFromFirestore()
         fetchSavedRecipesFromLocalDB() // Load recipes initially from the local database
     }
 
@@ -62,6 +64,29 @@ class SavedRecipesViewModel(context: Context) : ViewModel() {
             } else {
                 _savedRecipes.postValue(savedRecipes)
             }
+        }
+    }
+
+    fun removeSavedRecipe(recipe: Recipe) {
+        viewModelScope.launch(Dispatchers.IO) {
+            // Remove from local Room database
+            recipeDao.deleteRecipe(recipe)
+
+            // Remove from Firestore if applicable
+            val userId = auth.currentUser?.uid.orEmpty()
+            firestore.collection("users")
+                .document(userId)
+                .collection("savedRecipes")
+                .document(recipe.id)
+                .delete()
+                .addOnSuccessListener {
+                    _toastMessage.postValue("Recipe removed successfully!")
+                    fetchSavedRecipesFromLocalDB()
+                    fetchSavedRecipesFromFirestore()// Refresh the list
+                }
+                .addOnFailureListener { exception ->
+                    _toastMessage.postValue("Failed to remove recipe: ${exception.message}")
+                }
         }
     }
 

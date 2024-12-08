@@ -1,6 +1,7 @@
 package com.example.recipefinder.entities
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -15,4 +16,7 @@ interface RecipeDAO {
 
         @Query("SELECT * FROM recipes")
         suspend fun getAllRecipes(): List<Recipe>
+        // Method to delete a recipe
+        @Delete
+        suspend fun deleteRecipe(recipe: Recipe)
     }

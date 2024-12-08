@@ -11,7 +11,9 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.recipefinder.DialogLoadingFragment
 import com.example.recipefinder.R
 import com.example.recipefinder.databinding.FragmentCreateRecipeBinding
 
@@ -19,6 +21,7 @@ class CreateRecipeFragment : Fragment() {
     private var _binding: FragmentCreateRecipeBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: CreateRecipeViewModel
+    private lateinit var loadingDialog : DialogLoadingFragment
 
     private var imageUri: Uri? = null
 
@@ -142,6 +145,13 @@ class CreateRecipeFragment : Fragment() {
     }
 
     private fun observeViewModel() {
+        viewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
+            if (isLoading) {
+                showLoadingDialog()
+            } else {
+                dismissLoadingDialog()
+            }
+        })
         viewModel.ingredients.observe(viewLifecycleOwner) { ingredients ->
             binding.tvIngredientsPreview.text = ingredients.joinToString("\n") { "• $it" }
         }
@@ -170,8 +180,19 @@ class CreateRecipeFragment : Fragment() {
         }
     }
 
+    private fun dismissLoadingDialog() {
+        if (::loadingDialog.isInitialized) {
+            loadingDialog.dismiss()
+        }
+    }
+
+    private fun showLoadingDialog() {
+        loadingDialog = DialogLoadingFragment()
+        loadingDialog.show(parentFragmentManager, "LoadingDialog")
+    }
+
     private fun setLoadingState(isLoading: Boolean) {
-        binding.loadingSpinner.visibility = if (isLoading) View.VISIBLE else View.GONE
+//        binding.loadingSpinner.visibility = if (isLoading) View.VISIBLE else View.GONE
         binding.btnSaveRecipe.isEnabled = !isLoading
         binding.btnAddIngredient.isEnabled = !isLoading
         binding.btnAddPrepStep.isEnabled = !isLoading

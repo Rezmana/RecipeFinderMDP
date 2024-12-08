@@ -13,12 +13,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipefinder.R
 import com.example.recipefinder.RecipeAdapter
 import com.example.recipefinder.entities.Recipe
-import com.example.recipefinder.ui.browse.BrowseViewModel
+import com.example.recipefinder.ui.Browse.BrowseViewModel
 
 class BrowseFragment : Fragment() {
 
@@ -30,8 +31,10 @@ class BrowseFragment : Fragment() {
     private lateinit var cuisineTagsContainer: LinearLayout
     private lateinit var browseDisplayRecipes: RecyclerView
     private lateinit var ingredientGrid: GridLayout
+    private lateinit var clearFilterButton: Button
 
-    private val sampleTags = listOf("German", "Japanese", "Middle Eastern", "Chinese", "Italian")
+
+    private val sampleTags = listOf("Italian", "Mexican", "Indian", "Chinese", "French")
     private val allIngredients = listOf(
         "Flour", "Sugar", "Eggs", "Milk", "Butter", "Salt",
         "Tomatoes", "Chicken", "Cheese", "Rice", "Beans"
@@ -56,6 +59,7 @@ class BrowseFragment : Fragment() {
         cuisineTagsContainer = view.findViewById(R.id.cuisineTypeTags)
         browseDisplayRecipes = view.findViewById(R.id.browse_display_recipes)
         ingredientGrid = view.findViewById(R.id.ingredientGrid)
+        clearFilterButton = view.findViewById(R.id.clearFilterButton)
 
         // Setup RecyclerView
         setupRecyclerView()
@@ -64,6 +68,10 @@ class BrowseFragment : Fragment() {
         setupIngredientGrid()
         setupCuisineTags()
         setupListeners()
+
+        clearFilterButton.setOnClickListener {
+            viewModel.fetchAllRecipes() // Reset to original list
+        }
 
         // Observe ViewModel
         observeViewModel()
@@ -85,6 +93,7 @@ class BrowseFragment : Fragment() {
         viewModel.recipes.observe(viewLifecycleOwner) { recipes ->
             recipeAdapter.updateRecipes(recipes) // Update adapter when recipes change
         }
+
 
         viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
             message?.let {
@@ -139,7 +148,7 @@ class BrowseFragment : Fragment() {
                     marginEnd = 16
                 }
                 setOnClickListener {
-                    viewModel.filterRecipesByTag(tag) // Add tag-based filter in ViewModel
+                    viewModel.filterRecipesByCuisineType(tag) // Add tag-based filter in ViewModel
                 }
             }
             cuisineTagsContainer.addView(tagView)
@@ -149,5 +158,7 @@ class BrowseFragment : Fragment() {
     private fun onRecipeClicked(recipe: Recipe) {
         Toast.makeText(requireContext(), "Recipe clicked: ${recipe.recipeName}", Toast.LENGTH_SHORT).show()
         // Navigate to recipe details or handle click action
+        val action = BrowseFragmentDirections.actionNavigationBrowseToFoodDetailsFragment(recipe)
+        findNavController().navigate(action)
     }
 }

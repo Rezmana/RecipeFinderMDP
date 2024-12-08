@@ -33,7 +33,11 @@
         android:id="@+id/navigation_saved_recipe"
         android:name="com.example.recipefinder.ui.savedrecipes.SavedRecipes"
         android:label="@string/title_saved_recipe"
-        tools:layout="@layout/fragment_saved_recipe" />
+        tools:layout="@layout/fragment_saved_recipe">
+    <action
+        android:id="@+id/action_navigation_saved_recipe_to_foodDetailsFragment"
+        app:destination="@id/foodDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_create_recipe"
         android:name="com.example.recipefinder.ui.createrecipe.CreateRecipeFragment"
@@ -79,19 +83,6 @@
         android:name="com.example.recipefinder.ui.managerecipes.ManageRecipesFragment"
         android:label="Manage Recipes"
         tools:layout="@layout/fragment_manage_recipes" />
-
-    <fragment
-        android:id="@+id/nav_profile"
-        android:name="com.example.recipefinder.ui.profile.ProfileFragment"
-        android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
-
-
-    <fragment
-        android:id="@+id/fragment_browse"
-        android:name="com.example.recipefinder.ui.Browse.BrowseFragment"
-        android:label="fragment_browse"
-        tools:layout="@layout/fragment_browse" />
 
 
 </navigation>

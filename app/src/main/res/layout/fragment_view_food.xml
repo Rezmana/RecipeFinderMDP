@@ -171,6 +171,27 @@
                 android:text="Cook" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Steps:"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/stepsList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:padding="8dp"
+                android:text="Steps will appear here" />
+        </LinearLayout>
+
         <!-- Comment Input Section -->
         <LinearLayout
             android:layout_width="match_parent"

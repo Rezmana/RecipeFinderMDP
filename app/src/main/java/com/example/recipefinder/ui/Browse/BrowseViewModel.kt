@@ -1,4 +1,4 @@
-package com.example.recipefinder.ui.browse
+package com.example.recipefinder.ui.Browse
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -19,6 +19,7 @@ class BrowseViewModel : ViewModel() {
 
     private val _toastMessage = MutableLiveData<String?>()
     val toastMessage: LiveData<String?> get() = _toastMessage
+
 
     init {
         fetchAllRecipes() // Load all recipes initially
@@ -73,21 +74,43 @@ class BrowseViewModel : ViewModel() {
         }
     }
 
-    fun filterRecipesByTag(ingredient: String) {
+
+//    fun filterRecipesByTag(ingredient: String) {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            try {
+//                val querySnapshot = firestore.collection("recipes")
+//                    .whereArrayContains("typeCuisine", cuisineType)
+//                    .get()
+//                    .await()
+//
+//                val filteredRecipes = querySnapshot.toObjects(Recipe::class.java)
+//                _recipes.postValue(filteredRecipes)
+//            } catch (e: Exception) {
+//                _toastMessage.postValue("Failed to filter recipes: ${e.localizedMessage}")
+//            }
+//        }
+//    }
+
+    fun filterRecipesByCuisineType(cuisineType: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val querySnapshot = firestore.collection("recipes")
-                    .whereArrayContains("ingredients", ingredient)
+                    .whereEqualTo("typeCuisine", cuisineType) // Filter by cuisine type
                     .get()
                     .await()
 
-                val filteredRecipes = querySnapshot.toObjects(Recipe::class.java)
-                _recipes.postValue(filteredRecipes)
+                if (querySnapshot.isEmpty) {
+                    _toastMessage.postValue("No recipes found for \"$cuisineType\" cuisine")
+                } else {
+                    val recipes = querySnapshot.toObjects(Recipe::class.java)
+                    _recipes.postValue(recipes) // Update the list with filtered recipes
+                }
             } catch (e: Exception) {
-                _toastMessage.postValue("Failed to filter recipes: ${e.localizedMessage}")
+                _toastMessage.postValue("Failed to fetch recipes by cuisine: ${e.localizedMessage}")
             }
         }
     }
+
 
     fun clearToastMessage() {
         _toastMessage.value = null
